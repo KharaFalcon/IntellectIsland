@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">IntellectIsland</string>
+    <string name="nav_drawer_menu">Navigation drawer menu</string>
+    <string name="login_email">Login email:</string>
+    <string name="cancel">Cancel</string>
+    <string name="login">Login</string>
+    <string name="profile_icon_image">Profile Image</string>
+    <string name="delete">Delete\n</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit\n</string>
+</resources>
