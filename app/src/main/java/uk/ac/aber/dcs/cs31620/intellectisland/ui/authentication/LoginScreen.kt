@@ -16,12 +16,12 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import uk.ac.aber.dcs.cs31620.faa.R
+import uk.ac.aber.dcs.cs31620.intellectisland.R
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.IntellectIslandTheme
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController,
+   // navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     ConstraintLayout(
@@ -90,8 +90,8 @@ fun LoginScreen(
 @Composable
 @Preview
 private fun LoginScreenPreview() {
-    val navController = rememberNavController()
+   // val navController = rememberNavController()
     IntellectIslandTheme(dynamicColor = false) {
-        LoginScreen(navController)
+        //LoginScreen(navController)
     }
 }

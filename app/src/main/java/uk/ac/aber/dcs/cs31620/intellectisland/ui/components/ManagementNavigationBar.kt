@@ -19,7 +19,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import uk.ac.aber.dcs.cs31620.faa.R
+import uk.ac.aber.dcs.cs31620.intellectisland.R
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.screens
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.IntellectIslandTheme
