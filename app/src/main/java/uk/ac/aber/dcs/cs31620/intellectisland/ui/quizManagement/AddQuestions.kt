@@ -30,7 +30,7 @@ fun AddQuestions(navController: NavHostController) {
             modifier = Modifier.padding(bottom = 8.dp, top = 130.dp)
         )
 
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             thickness = 1.dp,
             color = Color.Gray

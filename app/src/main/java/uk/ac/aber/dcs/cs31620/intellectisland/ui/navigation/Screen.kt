@@ -6,21 +6,22 @@ sealed class Screen(
 ) {
     object HomeScreen : Screen("homeScreen")
     object Login : Screen("login")
-    object Add : Screen("add")
-    object Edit : Screen("edit")
     object Delete : Screen("delete")
     object StartQuiz : Screen("startQuiz")
     object Question : Screen("question")
     object AddQuestions : Screen("addQuestions")
+    object AddAnswers : Screen("addAnswers")
+    object EditQuestions : Screen("editQuestions")
 }
 
 val screens = listOf(
     Screen.HomeScreen,
     Screen.Login,
     Screen.AddQuestions,
-    Screen.Edit,
+    Screen.EditQuestions,
     Screen.Delete,
     Screen.StartQuiz,
     Screen.Question,
+    Screen.AddAnswers
 
 )

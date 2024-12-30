@@ -1,3 +1,5 @@
+package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,11 +28,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inverseOnSurfaceLight
 
 @Composable
-fun EditQuestions(navController: NavHostController) {
+fun RemoveQuestions(navController: NavHostController) {
     val questions = remember { mutableStateOf(listOf("Question 1?", "Question 2?", "Question 3?")) }
 
     MainTopNavigationBar()
@@ -41,7 +41,7 @@ fun EditQuestions(navController: NavHostController) {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Edit Questions",
+            text = "Remove Questions",
             color = Color.Black,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
@@ -59,7 +59,7 @@ fun EditQuestions(navController: NavHostController) {
             questions = questions.value,
             onEditButtonClick = { index ->
                 // Navigate to the edit screen and pass the selected question index or data
-                navController.navigate("editQuestionScreen/$index")
+                navController.navigate("removeQuestionScreen/$index")
             }
         )
 
@@ -110,7 +110,7 @@ fun QuestionsList(
 }
 
 @Composable
-fun EditQuestionScreen(navController: NavHostController, questionIndex: Int, questionText: String) {
+fun RemoveQuestionScreen(navController: NavHostController, questionIndex: Int, questionText: String) {
     val editedText = remember { mutableStateOf(questionText) }
 
     Column(

@@ -1,3 +1,5 @@
+package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,7 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inverseOnSurfaceLight
 
 @Composable
-fun EditQuestions(navController: NavHostController) {
+fun Results(navController: NavHostController) {
     val questions = remember { mutableStateOf(listOf("Question 1?", "Question 2?", "Question 3?")) }
 
     MainTopNavigationBar()
@@ -110,7 +112,7 @@ fun QuestionsList(
 }
 
 @Composable
-fun EditQuestionScreen(navController: NavHostController, questionIndex: Int, questionText: String) {
+fun ResultsQuestionScreen(navController: NavHostController, questionIndex: Int, questionText: String) {
     val editedText = remember { mutableStateOf(questionText) }
 
     Column(
@@ -141,7 +143,7 @@ fun EditQuestionScreen(navController: NavHostController, questionIndex: Int, que
             modifier = Modifier.align(Alignment.CenterHorizontally),
             shape = RoundedCornerShape(8.dp)
         ) {
-            Text("Save")
+            Text("Return Home")
         }
     }
 }

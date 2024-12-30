@@ -1,5 +1,6 @@
 
 package uk.ac.aber.dcs.cs31620.intellectisland
+import EditQuestions
 import Question
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.HomeScreen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.AddAnswers
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.AddQuestions
 
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode.StartQuiz
@@ -35,12 +37,14 @@ private fun BuildNavigationGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.AddQuestions.route
+        startDestination = Screen.EditQuestions.route
     ) {
             composable(Screen.HomeScreen.route){ HomeScreen(navController)}
             composable(Screen.StartQuiz.route){ StartQuiz(navController)}
             composable(Screen.Question.route){ Question(navController) }
             composable(Screen.AddQuestions.route){ AddQuestions(navController) }
+            composable(Screen.AddAnswers.route){ AddAnswers(navController) }
+            composable(Screen.EditQuestions.route){ EditQuestions(navController) }
     }
 }
 
