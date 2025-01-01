@@ -16,7 +16,7 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
 
 @Composable
 fun HomeScreen(navController: NavHostController) { // Ensure navController is passed here
-    MainTopNavigationBar() // Pass navController to MainTopNavigationBar
+    MainTopNavigationBar(navController) // Pass navController to MainTopNavigationBar
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -49,7 +49,7 @@ fun HomeScreen(navController: NavHostController) { // Ensure navController is pa
         // Management Mode Button
         OutlinedButton(
             onClick = {
-                // Management Mode action
+                navController.navigate(route = Screen.AddQuestions.route)
             },
             colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight),
         ) {

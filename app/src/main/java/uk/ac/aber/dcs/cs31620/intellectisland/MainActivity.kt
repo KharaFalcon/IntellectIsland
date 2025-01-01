@@ -1,6 +1,5 @@
 
 package uk.ac.aber.dcs.cs31620.intellectisland
-import EditQuestions
 import Question
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -14,6 +13,8 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.HomeScreen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.AddAnswers
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.AddQuestions
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.EditAnswers
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.EditQuestions
 
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode.StartQuiz
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.IntellectIslandTheme
@@ -37,7 +38,7 @@ private fun BuildNavigationGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.EditQuestions.route
+        startDestination = Screen.HomeScreen.route
     ) {
             composable(Screen.HomeScreen.route){ HomeScreen(navController)}
             composable(Screen.StartQuiz.route){ StartQuiz(navController)}
@@ -45,6 +46,7 @@ private fun BuildNavigationGraph() {
             composable(Screen.AddQuestions.route){ AddQuestions(navController) }
             composable(Screen.AddAnswers.route){ AddAnswers(navController) }
             composable(Screen.EditQuestions.route){ EditQuestions(navController) }
+            composable(Screen.EditAnswers.route){ EditAnswers(navController) }
     }
 }
 

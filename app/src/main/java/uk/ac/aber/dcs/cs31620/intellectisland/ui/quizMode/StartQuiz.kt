@@ -25,7 +25,7 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.tertiaryContainerLight
 
 @Composable
 fun StartQuiz(navController: NavHostController) {
-    MainTopNavigationBar()
+    MainTopNavigationBar(navController)
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -51,7 +51,7 @@ fun StartQuiz(navController: NavHostController) {
         // Start Quiz Button
         OutlinedButton(
             onClick = {
-                navController.navigate(route = Screen.Question.route)
+                navController.navigate(Screen.Question.route)
             },
             colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight),
         ) {

@@ -17,7 +17,7 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
 
 @Composable
 fun AddAnswers(navController: NavHostController) {
-    MainTopNavigationBar()
+    MainTopNavigationBar(navController)
 
     // State to hold the question bank and the selected radio button
     val questionBank = remember { mutableStateListOf<String>() }
@@ -121,6 +121,7 @@ fun AddAnswers(navController: NavHostController) {
             Button(
                 colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight),
                 onClick = {
+                    // Handle question submission here
                     navController.navigate(route = Screen.EditQuestions.route)
                 },
                 modifier = Modifier.padding(top = 16.dp)

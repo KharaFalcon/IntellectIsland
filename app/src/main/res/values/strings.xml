@@ -8,4 +8,7 @@
     <string name="delete">Delete\n</string>
     <string name="add">Add</string>
     <string name="edit">Edit\n</string>
+    <string name="home">Home</string>
+    <string name="cats">Quiz\n</string>
+    <string name="fosterer_map">Management\n</string>
 </resources>

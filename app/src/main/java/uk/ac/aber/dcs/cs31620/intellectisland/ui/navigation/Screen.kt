@@ -12,6 +12,7 @@ sealed class Screen(
     object AddQuestions : Screen("addQuestions")
     object AddAnswers : Screen("addAnswers")
     object EditQuestions : Screen("editQuestions")
+    object EditAnswers : Screen("editAnswers")
 }
 
 val screens = listOf(
@@ -22,6 +23,7 @@ val screens = listOf(
     Screen.Delete,
     Screen.StartQuiz,
     Screen.Question,
-    Screen.AddAnswers
+    Screen.AddAnswers,
+    Screen.EditAnswers
 
 )

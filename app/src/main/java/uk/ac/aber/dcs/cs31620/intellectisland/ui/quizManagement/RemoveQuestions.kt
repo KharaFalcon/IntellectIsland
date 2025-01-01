@@ -33,7 +33,7 @@ import androidx.compose.ui.graphics.Color
 fun RemoveQuestions(navController: NavHostController) {
     val questions = remember { mutableStateOf(listOf("Question 1?", "Question 2?", "Question 3?")) }
 
-    MainTopNavigationBar()
+    MainTopNavigationBar(navController)
     Column(
         modifier = Modifier
             .fillMaxSize()

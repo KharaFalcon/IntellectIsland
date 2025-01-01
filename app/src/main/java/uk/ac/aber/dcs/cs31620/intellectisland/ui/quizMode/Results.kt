@@ -35,7 +35,7 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inverseOnSurfaceLight
 fun Results(navController: NavHostController) {
     val questions = remember { mutableStateOf(listOf("Question 1?", "Question 2?", "Question 3?")) }
 
-    MainTopNavigationBar()
+    MainTopNavigationBar(navController)
     Column(
         modifier = Modifier
             .fillMaxSize()
