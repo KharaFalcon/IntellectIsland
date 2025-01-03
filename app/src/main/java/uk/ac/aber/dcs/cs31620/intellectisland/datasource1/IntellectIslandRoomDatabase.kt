@@ -10,7 +10,6 @@ package uk.ac.aber.dcs.cs31620.intellectisland.datasource1
     import kotlinx.coroutines.Dispatchers
     import kotlinx.coroutines.launch
     import uk.ac.aber.dcs.cs31620.intellectisland.datasource1.util.OptionsConverter
-    import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionDao
     import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionData
 
 @Database(entities = [QuestionData::class], version = 1)

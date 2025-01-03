@@ -1,26 +1,19 @@
-package uk.ac.aber.dcs.cs31620.intellectisland.model
+package uk.ac.aber.dcs.cs31620.intellectisland.datasource1
 
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import androidx.lifecycle.LiveData
-import androidx.room.*
-
+import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionData
 
 @Dao
 interface QuestionDao {
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insertSingleQuestion(question: QuestionData)
 
     @Insert
-    suspend fun insertMultipleQuestions(questionsList: List<QuestionData>)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateQuestion(question: QuestionData)
-
-    @Delete
-    suspend fun deleteQuestion(question: QuestionData)
-
-    @Query("DELETE FROM questions")
-    suspend fun deleteAllQuestions()
+    suspend fun insertMultipleQuestions(questions: List<QuestionData>)
 
     @Query("SELECT * FROM questions")
     fun getAllQuestions(): LiveData<List<QuestionData>>
@@ -28,9 +21,6 @@ interface QuestionDao {
     @Query("SELECT * FROM questions WHERE id = :id")
     fun getQuestionById(id: Int): LiveData<QuestionData>
 
-    @Query("""SELECT * FROM questions WHERE questionText LIKE :keyword""")
-    fun searchQuestions(keyword: String): LiveData<List<QuestionData>>
-
-    @Query("SELECT * FROM questions WHERE correctAnswerIndex = :answerIndex")
-    fun getQuestionsByCorrectAnswerIndex(answerIndex: Int): LiveData<List<QuestionData>>
+    @Update
+    suspend fun updateQuestion(question: QuestionData)
 }

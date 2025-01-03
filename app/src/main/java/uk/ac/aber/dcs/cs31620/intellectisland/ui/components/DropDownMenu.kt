@@ -1,7 +1,9 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -23,12 +25,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.IntellectIslandTheme
+
 @Composable
 fun DropDownMenu(navController: NavHostController, onClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
-
     Box(modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.TopStart)) {
         IconButton(onClick = { expanded = true }) {
             Icon(Icons.Default.MoreVert, contentDescription = "More options")
@@ -83,3 +88,5 @@ fun DropDownMenu(navController: NavHostController, onClick: () -> Unit) {
         }
     }
 }
+
+

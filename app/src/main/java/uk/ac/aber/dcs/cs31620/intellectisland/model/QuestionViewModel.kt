@@ -1,59 +1,31 @@
 import android.app.Application
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import uk.ac.aber.dcs.cs31620.intellectisland.datasource1.IntellectIslandRoomDatabase
+import uk.ac.aber.dcs.cs31620.intellectisland.datasource1.QuestionDao
 import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionData
-import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionDao
-
+import uk.ac.aber.dcs.cs31620.intellectisland.model.UserAnswer
 class QuestionViewModel(application: Application) : AndroidViewModel(application) {
+    // Use safe call and provide a fallback or throw exception if null
+    private val questionDao: QuestionDao = IntellectIslandRoomDatabase.getDatabase(application)?.questionDao()
+        ?: throw IllegalStateException("Database is not initialized")
 
-    private val questionDao: QuestionDao
-    val allQuestions: LiveData<List<QuestionData>>  // Observed by the UI for all questions
-    var searchedQuestions: LiveData<List<QuestionData>> // Observed by the UI for search results
+    val allQuestions: LiveData<List<QuestionData>> = questionDao.getAllQuestions()
 
-    init {
-        // Get the DAO instance from the Room Database
-        val database = IntellectIslandRoomDatabase.getDatabase(application)
-        questionDao = database?.questionDao()!!
-
-        // Initialize the LiveData for all questions
-        allQuestions = questionDao.getAllQuestions()
-
-        // Initialize searchedQuestions as an empty list initially
-        searchedQuestions = questionDao.getAllQuestions()
-
-        // Populate the database with hardcoded data only if the database is empty
-        checkAndHardcodeQuestions()
+    // Shuffled questions
+    val shuffledQuestions: LiveData<List<QuestionData>> = liveData(Dispatchers.IO) {
+        emit(allQuestions.value?.shuffled() ?: emptyList())
     }
 
-    // Check if the database is empty, and then hardcode data
-    private fun checkAndHardcodeQuestions() {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (questionDao.getAllQuestions().value.isNullOrEmpty()) {
-                val hardcodedQuestions = listOf(
-                    QuestionData(
-                        questionText = "What is the capital of France?",
-                        options = listOf("Berlin", "Madrid", "Paris", "Rome"),
-                        correctAnswerIndex = 2
-                    ),
-                    QuestionData(
-                        questionText = "What is 2 + 2?",
-                        options = listOf("3", "4", "5", "6"),
-                        correctAnswerIndex = 1
-                    ),
-                    QuestionData(
-                        questionText = "Which planet is closest to the Sun?",
-                        options = listOf("Earth", "Venus", "Mercury", "Mars"),
-                        correctAnswerIndex = 2
-                    )
-                )
-                questionDao.insertMultipleQuestions(hardcodedQuestions)
-            }
-        }
-    }
+    // Save user answers in the ViewModel
+    private val _userAnswers = mutableStateOf<List<UserAnswer>>(emptyList())
+    val userAnswers: State<List<UserAnswer>> get() = _userAnswers
 
     // Insert a single question into the database
     fun insertSingleQuestion(question: QuestionData) {
@@ -62,46 +34,31 @@ class QuestionViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    // Insert multiple questions into the database
-    fun insertMultipleQuestions(questionsList: List<QuestionData>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            questionDao.insertMultipleQuestions(questionsList)
+    // Save the user's answer
+    fun saveUserAnswer(questionId: Int, selectedAnswerIndex: Int) {
+        val userAnswer = UserAnswer(questionId, selectedAnswerIndex)
+        _userAnswers.value = _userAnswers.value.toMutableList().apply {
+            removeAll { it.questionId == questionId } // Remove any previous answer for this question
+            add(userAnswer) // Add the new answer
         }
     }
 
-    // Update an existing question in the database
-    fun updateQuestion(question: QuestionData) {
-        viewModelScope.launch(Dispatchers.IO) {
-            questionDao.updateQuestion(question)
+    // Calculate score based on user's answers
+    fun calculateScore(questions: List<QuestionData>, userAnswers: List<UserAnswer>): Int {
+        return questions.count { question ->
+            userAnswers.find { it.questionId == question.id }?.selectedAnswerIndex == question.correctAnswerIndex
         }
     }
 
-    // Delete a single question from the database
-    fun deleteQuestion(question: QuestionData) {
+    // Get a specific question by its ID
+    fun getQuestionById(questionId: Int): LiveData<QuestionData> {
+        return questionDao.getQuestionById(questionId)
+    }
+
+    // Update a question in the database
+    fun updateQuestion(updatedQuestion: QuestionData) {
         viewModelScope.launch(Dispatchers.IO) {
-            questionDao.deleteQuestion(question)
+            questionDao.updateQuestion(updatedQuestion)
         }
-    }
-
-    // Delete all questions from the database
-    fun deleteAllQuestions() {
-        viewModelScope.launch(Dispatchers.IO) {
-            questionDao.deleteAllQuestions()
-        }
-    }
-
-    // Get a single question by ID
-    fun getQuestionById(id: Int): LiveData<QuestionData> {
-        return questionDao.getQuestionById(id)
-    }
-
-    // Search questions by a keyword
-    fun searchQuestions(keyword: String) {
-        searchedQuestions = questionDao.searchQuestions("%$keyword%")
-    }
-
-    // Get questions by the correct answer index
-    fun getQuestionsByCorrectAnswerIndex(answerIndex: Int): LiveData<List<QuestionData>> {
-        return questionDao.getQuestionsByCorrectAnswerIndex(answerIndex)
     }
 }
