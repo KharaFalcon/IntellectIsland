@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.HomeScreen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.UserProfile
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.AddQuestions
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.EditAnswers
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.EditQuestionScreen
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
             IntellectIslandTheme(dynamicColor = false) {
                 BuildNavigationGraph()
             }
@@ -38,7 +40,7 @@ private fun BuildNavigationGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.HomeScreen.route
+        startDestination = Screen.UserProfile.route
     ) {
         composable(Screen.HomeScreen.route) { HomeScreen(navController) }
         composable(Screen.StartQuiz.route) { StartQuiz(navController) }
@@ -53,4 +55,5 @@ private fun BuildNavigationGraph() {
         //composable(Screen.EditQuestionScreen.route) { EditQuestionScreen(navController) }
         composable(Screen.EditAnswers.route) { EditAnswers(navController) }
         composable(Screen.Results.route) { Results(navController) }
+        composable(Screen.UserProfile.route) { UserProfile(navController) }
     }}

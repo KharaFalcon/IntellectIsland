@@ -14,6 +14,7 @@ sealed class Screen(
     object EditAnswers : Screen("editAnswers")
     object EditQuestions : Screen("editQuestions")
     object Results : Screen("results")
+    object UserProfile : Screen("userProfile")
 }
 
 val screens = listOf(
@@ -26,6 +27,7 @@ val screens = listOf(
     Screen.Question,
     Screen.EditAnswers,
     Screen.EditQuestions,
-    Screen.Results
+    Screen.Results,
+    Screen.UserProfile
 
 )
