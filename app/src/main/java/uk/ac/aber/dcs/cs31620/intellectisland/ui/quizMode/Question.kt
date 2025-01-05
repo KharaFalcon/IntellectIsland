@@ -2,7 +2,9 @@ package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode
 
 import QuestionViewModel
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -11,12 +13,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.MainTopNavigationBar
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.QuestionProgressBar
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inversePrimaryLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
 
 @Composable
@@ -47,54 +51,78 @@ fun Question(
             Text(
                 text = question.questionText,
                 fontSize = 40.sp,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(horizontal = 16.dp),
+                lineHeight = 48.sp // Added line height for better spacing when text wraps
             )
             Spacer(modifier = Modifier.height(32.dp))
 
-            val options = question.options
-            options.forEachIndexed { index, option ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    shape = RoundedCornerShape(10.dp),
-                    elevation = CardDefaults.cardElevation(4.dp),
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Circle with A, B, C, ...
-                        Box(
+            // Blue box wrapping the options
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .background(
+                        color = inversePrimaryLight, // Light blue color
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                    .padding(16.dp) // Inner padding for content
+            ) {
+                Column {
+                    val options = question.options
+                    options.forEachIndexed { index, option ->
+                        Card(
                             modifier = Modifier
-                                .size(40.dp)
-                                .padding(end = 16.dp),
-                            contentAlignment = Alignment.Center
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            shape = RoundedCornerShape(10.dp),
+                            elevation = CardDefaults.cardElevation(4.dp),
                         ) {
-                            Text(
-                                text = ('A' + index).toString(),
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                // Circle with A, B, C, ...
+                                Box(
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .background(
+                                            color = MaterialTheme.colorScheme.primary, // Circle color
+                                            shape = CircleShape
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = ('A' + index).toString(),
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = Color.White, // Text color
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
 
-                        // Option text
-                        Text(
-                            text = option,
-                            modifier = Modifier.weight(1f),
-                            fontSize = 16.sp
-                        )
+                                Spacer(modifier = Modifier.width(16.dp))
 
-                        // Radio button
-                        RadioButton(
-                            selected = selectedAnswerIndex == index,
-                            onClick = {
-                                selectedAnswerIndex = index
-                                viewModel.saveUserAnswer(question.id, index)
-                                Log.d("QuestionScreen", "Selected Option: $option at index $index")
+                                // Option text
+                                Text(
+                                    text = option,
+                                    modifier = Modifier.weight(1f),
+                                    fontSize = 16.sp
+                                )
+
+                                // Radio button
+                                RadioButton(
+                                    selected = selectedAnswerIndex == index,
+                                    onClick = {
+                                        selectedAnswerIndex = index
+                                        viewModel.saveUserAnswer(question.id, index)
+                                        Log.d("QuestionScreen", "Selected Option: $option at index $index")
+                                    }
+                                )
                             }
-                        )
+                        }
                     }
                 }
             }
@@ -102,43 +130,60 @@ fun Question(
             Spacer(modifier = Modifier.height(32.dp))
 
             // Navigation buttons
-            if (currentQuestionIndex > 0) {
-                Button(
-                    onClick = { currentQuestionIndex-- },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
+            if (currentQuestionIndex < questionList.size) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween // Ensures buttons are spaced apart
                 ) {
-                    Text(text = "Previous", fontSize = 16.sp)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            if (currentQuestionIndex < questionList.size - 1) {
-                Button(
-                    onClick = {
-                        if (selectedAnswerIndex == -1) {
-                            viewModel.saveUserAnswer(question.id, -1)
-                        } else {
-                            viewModel.saveUserAnswer(question.id, selectedAnswerIndex)
+                    // Show "Previous" button only if not on the first question
+                    if (currentQuestionIndex > 0) {
+                        Button(
+                            onClick = {
+                                currentQuestionIndex--
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp), // Add spacing between buttons
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight)
+                        ) {
+                            Text(
+                                text = "Previous",
+                                fontSize = 16.sp,
+                                color = Color.White
+                            )
                         }
-                        currentQuestionIndex++
-                    },
-                    modifier = Modifier.padding(10.dp),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight),
-                ) {
-                    Text(text = "Next", fontSize = 32.sp, color = Color.White, modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp, top = 10.dp, start = 150.dp))
-                }
-            } else {
-                Button(
-                    onClick = {
-                        navController.navigate(Screen.Results.route)
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Text(text = "Results", fontSize = 16.sp)
+                    }
+
+                    // Next button
+                    Button(
+                        onClick = {
+                            if (selectedAnswerIndex == -1) {
+                                viewModel.saveUserAnswer(currentQuestion!!.id, -1)
+                            } else {
+                                viewModel.saveUserAnswer(currentQuestion!!.id, selectedAnswerIndex)
+                            }
+                            if (currentQuestionIndex < questionList.size - 1) {
+                                currentQuestionIndex++
+                            } else {
+                                // Navigate to the Results screen when Submit is clicked
+                                navController.navigate(Screen.Results.route) // Navigate to the Results screen
+                            }
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = if (currentQuestionIndex > 0) 8.dp else 0.dp), // Adjust padding when "Previous" is absent
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight)
+                    ) {
+                        Text(
+                            text = if (currentQuestionIndex < questionList.size - 1) "Next" else "Submit",
+                            fontSize = 16.sp,
+                            color = Color.White
+                        )
+                    }
                 }
             }
         }

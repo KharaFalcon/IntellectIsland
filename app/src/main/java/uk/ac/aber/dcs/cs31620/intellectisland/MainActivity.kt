@@ -40,7 +40,7 @@ private fun BuildNavigationGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.UserProfile.route
+        startDestination = Screen.HomeScreen.route
     ) {
         composable(Screen.HomeScreen.route) { HomeScreen(navController) }
         composable(Screen.StartQuiz.route) { StartQuiz(navController) }

@@ -3,7 +3,9 @@ package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement
 import QuestionViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -25,22 +27,15 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.surfaceLight
 
 @Composable
 fun AddQuestions(navController: NavHostController) {
-    // Get the ViewModel instance
     val questionViewModel: QuestionViewModel = viewModel()
-
-    // State to hold the question text input
-    var textFieldValue by remember { mutableStateOf("") }
-
-    // Observe all questions from the database (LiveData)
+    var questionText by remember { mutableStateOf("") }
+    // Using remember with mutableStateOf to hold the list of options
+    var options by remember { mutableStateOf(MutableList(4) { "" }) }
+    var selectedCorrectAnswer by remember { mutableStateOf(0) } // Tracks the selected correct answer index
     val allQuestions by questionViewModel.allQuestions.observeAsState(emptyList())
-
-    // Handle adding the question asynchronously
     val coroutineScope = rememberCoroutineScope()
-
-    // Snackbar host state (if you want to show snackbar messages)
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Composable UI
     TopLevelScaffold(
         navController = navController,
         coroutineScope = coroutineScope,
@@ -49,8 +44,9 @@ fun AddQuestions(navController: NavHostController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(innerPadding)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp)
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
                 // Segmentation Button
@@ -59,65 +55,78 @@ fun AddQuestions(navController: NavHostController) {
                     navController = navController
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                Text(
-                    text = "Add a question",
-                    fontSize = 24.sp,
-                    color = Color.Black,
-                    modifier = Modifier.padding(bottom = 8.dp, top = 10.dp)
-                )
-
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    thickness = 1.dp,
-                    color = Color.Gray
-                )
-
-                Spacer(modifier = Modifier.height(50.dp))
-
-                // Text field for entering the question
                 OutlinedTextField(
-                    value = textFieldValue,
-                    onValueChange = { textFieldValue = it },
+                    value = questionText,
+                    onValueChange = { questionText = it },
                     label = { Text("Enter your question here") },
                     modifier = Modifier
-                        .fillMaxWidth(0.8f)
-                        .padding(bottom = 50.dp),
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
                     singleLine = true
                 )
 
-                // Add question button
+                // Options input
+                options.forEachIndexed { index, option ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        RadioButton(
+                            selected = index == selectedCorrectAnswer,
+                            onClick = { selectedCorrectAnswer = index }
+                        )
+                        OutlinedTextField(
+                            value = option,
+                            onValueChange = { newOption ->
+                                // Update the specific option in the list
+                                options = options.toMutableList().apply { this[index] = newOption }
+                            },
+                            label = { Text("Option ${index + 1}") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                            singleLine = true
+                        )
+                    }
+                }
+
                 OutlinedButton(
                     onClick = {
-                        if (textFieldValue.isNotBlank()) {
-                            // Create a new QuestionData object
-                            val newQuestion = QuestionData(
-                                questionText = textFieldValue,
-                                options = listOf("Option 1", "Option 2", "Option 3", "Option 4"),  // Add your options here
-                                correctAnswerIndex = 0  // Make sure to update with the actual correct index if needed
-                            )
-                            // Insert the question into the database
+                        if (questionText.isBlank() || options.any { it.isBlank() }) {
                             coroutineScope.launch {
-                                questionViewModel.insertSingleQuestion(newQuestion)
+                                snackbarHostState.showSnackbar("Please fill out all fields.")
                             }
+                            return@OutlinedButton
+                        }
 
-                            // Clear the text field
-                            textFieldValue = ""
+                        coroutineScope.launch {
+                            try {
+                                val questionId = questionViewModel.insertQuestion(
+                                    QuestionData(
+                                        questionText = questionText,
+                                        options = options,
+                                        correctAnswerIndex = selectedCorrectAnswer
+                                    )
+                                )
+                                snackbarHostState.showSnackbar("Question added successfully!")
+
+                                // Clear input fields after success
+                                questionText = ""
+                                options = MutableList(4) { "" }
+                                selectedCorrectAnswer = 0
+                            } catch (e: Exception) {
+                                snackbarHostState.showSnackbar("Failed to add question: ${e.message}")
+                            }
                         }
                     },
                     colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight),
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 16.dp)
                 ) {
-                    Text(
-                        text = "Add Question",
-                        fontSize = 40.sp,
-                        color = Color.White,
-                        modifier = Modifier.padding(bottom = 16.dp, top = 16.dp, start = 16.dp, end = 16.dp),
-                    )
+                    Text(text = "Add Question", fontSize = 18.sp, color = Color.White)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Display the list of questions
                 Text(
                     text = "Questions in the bank:",
                     fontSize = 20.sp,
@@ -125,38 +134,32 @@ fun AddQuestions(navController: NavHostController) {
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
-                // Display each question inside a Card with rounded corners
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    allQuestions.forEach { question ->
-                        Card(
+                allQuestions.forEach { question ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+                    ) {
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 4.dp),
-                            shape = RoundedCornerShape(12.dp), // Rounded corners
-                            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-
+                                .padding(16.dp)
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            ) {
-                                Text(
-                                    text = question.questionText,
-                                    fontSize = 16.sp,
-                                    color = Color.Black
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = "Options: ${question.options.joinToString(", ")}",
-                                    fontSize = 14.sp,
-                                    color = Color.DarkGray
-                                )
-                            }
+                            Text(text = question.questionText, fontSize = 16.sp, color = Color.Black)
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "Options: ${question.options.joinToString(", ")}",
+                                fontSize = 14.sp,
+                                color = Color.DarkGray
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "Correct Answer: ${question.options[question.correctAnswerIndex]}",
+                                fontSize = 14.sp,
+                                color = Color.Green
+                            )
                         }
                     }
                 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Settings
@@ -53,7 +54,7 @@ fun DropDownMenu(navController: NavHostController, onClick: () -> Unit) {
 
             // Log Out Menu Item
             DropdownMenuItem(
-                text = { Text("Log Out") },
+                text = { Text("Settings") },
                 onClick = {
                     expanded = false // Close the menu
                     // Navigate to Log Out screen or perform log out
@@ -69,7 +70,7 @@ fun DropDownMenu(navController: NavHostController, onClick: () -> Unit) {
                     expanded = false // Close the menu
                     // Logic to exit the quiz (you may need to use a ViewModel or navigate)
                 },
-                leadingIcon = { Icon(Icons.Outlined.Settings, contentDescription = "Settings Icon") }
+                leadingIcon = { Icon(Icons.Outlined.Delete, contentDescription = "Settings Icon") }
             )
 
             // Divider

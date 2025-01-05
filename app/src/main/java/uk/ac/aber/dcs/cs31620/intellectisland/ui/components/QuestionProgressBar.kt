@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun QuestionProgressBar(currentQuestionIndex: Int, totalQuestions: Int) {
@@ -26,11 +26,11 @@ fun QuestionProgressBar(currentQuestionIndex: Int, totalQuestions: Int) {
     ) {
         Text(
             text = "Question ${currentQuestionIndex + 1} of $totalQuestions",
-            style = MaterialTheme.typography.bodyMedium
+            fontSize = 20.sp, // Corrected to use `sp` for font size
         )
 
         LinearProgressIndicator(
-            progress = { progress },
+            progress = progress, // Use the actual Float value here
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)

@@ -59,7 +59,7 @@ fun HomeScreen(navController: NavHostController) {
                         text = "Quiz Mode",
                         fontSize = 30.sp,
                         color = Color.White,
-                        modifier = Modifier.padding(bottom = 60.dp, top = 60.dp, start = 100.dp, end = 100.dp),
+                        modifier = Modifier.padding(bottom = 60.dp, top = 60.dp, start = 80.dp, end = 80.dp),
                     )
                 }
 
@@ -76,7 +76,7 @@ fun HomeScreen(navController: NavHostController) {
                         text = "Management Mode",
                         fontSize = 30.sp,
                         color = Color.White,
-                        modifier = Modifier.padding(bottom = 60.dp, top = 60.dp, start = 50.dp, end = 50.dp),
+                        modifier = Modifier.padding(bottom = 60.dp, top = 60.dp, start = 30.dp, end = 30.dp),
                     )
                 }
             }

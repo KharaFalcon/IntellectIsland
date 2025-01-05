@@ -1,10 +1,8 @@
+
 package uk.ac.aber.dcs.cs31620.intellectisland.datasource1
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
 import androidx.lifecycle.LiveData
+import androidx.room.*
 import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionData
 
 @Dao
@@ -14,6 +12,9 @@ interface QuestionDao {
 
     @Insert
     suspend fun insertMultipleQuestions(questions: List<QuestionData>)
+
+    @Insert
+    suspend fun insertQuestion(question: QuestionData): Long
 
     @Query("SELECT * FROM questions")
     fun getAllQuestions(): LiveData<List<QuestionData>>
