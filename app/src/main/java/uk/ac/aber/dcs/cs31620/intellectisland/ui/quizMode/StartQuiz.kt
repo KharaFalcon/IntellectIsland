@@ -1,5 +1,6 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode
 
+import QuestionViewModel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -27,10 +30,11 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.secondaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.tertiaryContainerLight
 @Composable
-fun StartQuiz(navController: NavHostController) {
+fun StartQuiz(navController: NavHostController,viewModel: QuestionViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     // Initialize coroutineScope and snackbarHostState
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+
 
     // MainTopNavigationBar
     MainTopNavigationBar(navController)
@@ -56,12 +60,12 @@ fun StartQuiz(navController: NavHostController) {
                     color = Color.Gray,
                     modifier = Modifier.padding(40.dp)
                 )
-
+                val questionList by viewModel.allQuestions.observeAsState(emptyList())
                 // Circular Progress Indicator
                 CircularProgressIndicator(
                     progress = 1f, // 50% progress
                     question = "Questions",
-                    largeNumber = 5,
+                    largeNumber = questionList.size,
                     circleColor = tertiaryContainerLight,
                     trackColor = secondaryContainerLight,
                     circleSize = 200f,

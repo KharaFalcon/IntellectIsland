@@ -1,7 +1,9 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement
 
 import QuestionViewModel
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -19,6 +21,8 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.SegmentationButton
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.TopLevelScaffold
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.surfaceLight
+
 @Composable
 fun AddQuestions(navController: NavHostController) {
     // Get the ViewModel instance
@@ -121,15 +125,39 @@ fun AddQuestions(navController: NavHostController) {
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
-                Column(modifier = Modifier.padding(top = 8.dp)) {
-                    // Observe the list of questions and display them
+                // Display each question inside a Card with rounded corners
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
                     allQuestions.forEach { question ->
-                        Text(
-                            text = question.questionText,
-                            fontSize = 16.sp,
-                            color = Color.DarkGray,
-                            modifier = Modifier.padding(4.dp)
-                        )
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                            shape = RoundedCornerShape(12.dp), // Rounded corners
+                            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            ) {
+                                Text(
+                                    text = question.questionText,
+                                    fontSize = 16.sp,
+                                    color = Color.Black
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "Options: ${question.options.joinToString(", ")}",
+                                    fontSize = 14.sp,
+                                    color = Color.DarkGray
+                                )
+                            }
+                        }
                     }
                 }
             }

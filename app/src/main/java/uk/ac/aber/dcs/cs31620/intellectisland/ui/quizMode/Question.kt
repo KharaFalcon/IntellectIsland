@@ -10,12 +10,15 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.MainTopNavigationBar
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.QuestionProgressBar
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
+
 @Composable
 fun Question(
     navController: NavHostController,
@@ -25,11 +28,7 @@ fun Question(
     var currentQuestionIndex by rememberSaveable { mutableStateOf(0) }
     val currentQuestion = questionList.getOrNull(currentQuestionIndex)
 
-    // Track the selected answer index (nullable Int)
     var selectedAnswerIndex by rememberSaveable { mutableStateOf(-1) } // -1 means no answer selected
-
-    // Debug log to track selectedAnswerIndex
-    Log.d("QuestionScreen", "Selected Answer Index: $selectedAnswerIndex")
 
     MainTopNavigationBar(navController)
 
@@ -39,49 +38,73 @@ fun Question(
             .padding(top = 150.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Display question progress
         QuestionProgressBar(
             currentQuestionIndex = currentQuestionIndex,
             totalQuestions = questionList.size
         )
-
-        // Display the current question
+        Spacer(modifier = Modifier.height(32.dp))
         currentQuestion?.let { question ->
             Text(
                 text = question.questionText,
-                fontSize = 24.sp,
+                fontSize = 40.sp,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
+            Spacer(modifier = Modifier.height(32.dp))
 
             val options = question.options
             options.forEachIndexed { index, option ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    elevation = CardDefaults.cardElevation(4.dp),
                 ) {
-                    // Check if the current option is selected based on the index
-                    RadioButton(
-                        selected = selectedAnswerIndex == index, // Compare index directly
-                        onClick = {
-                            selectedAnswerIndex = index
-                            viewModel.saveUserAnswer(question.id, index)
-                            Log.d(
-                                "QuestionScreen",
-                                "Selected Option: $option at index $index"
-                            ) // Log selected answer
-                        } // Set selected answer index
-                    )
-                    Text(text = option)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Circle with A, B, C, ...
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .padding(end = 16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = ('A' + index).toString(),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        }
+
+                        // Option text
+                        Text(
+                            text = option,
+                            modifier = Modifier.weight(1f),
+                            fontSize = 16.sp
+                        )
+
+                        // Radio button
+                        RadioButton(
+                            selected = selectedAnswerIndex == index,
+                            onClick = {
+                                selectedAnswerIndex = index
+                                viewModel.saveUserAnswer(question.id, index)
+                                Log.d("QuestionScreen", "Selected Option: $option at index $index")
+                            }
+                        )
+                    }
                 }
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Show "Previous" button if not on the first question
+            // Navigation buttons
             if (currentQuestionIndex > 0) {
                 Button(
-                    onClick = {
-                        currentQuestionIndex--
-                    },
+                    onClick = { currentQuestionIndex-- },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp)
                 ) {
@@ -91,35 +114,26 @@ fun Question(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Show "Next" button or "Results" button on the last question
             if (currentQuestionIndex < questionList.size - 1) {
                 Button(
                     onClick = {
-                        // Log the current selected answer when moving to next
-                        Log.d("QuestionScreen", "Answer for Question ${question.id} saved with index: $selectedAnswerIndex")
-
-                        // Save the user's answer (handle null for no answer)
                         if (selectedAnswerIndex == -1) {
-                            // Treat as incorrect if no answer selected
-                            viewModel.saveUserAnswer(question.id, -1) // Null for no answer
+                            viewModel.saveUserAnswer(question.id, -1)
                         } else {
                             viewModel.saveUserAnswer(question.id, selectedAnswerIndex)
                         }
-
-                        // Move to the next question
                         currentQuestionIndex++
                     },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(10.dp)
+                    modifier = Modifier.padding(10.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight),
                 ) {
-                    Text(text = "Next", fontSize = 16.sp)
+                    Text(text = "Next", fontSize = 32.sp, color = Color.White, modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp, top = 10.dp, start = 150.dp))
                 }
             } else {
-                // Show Results button on the last question
                 Button(
                     onClick = {
-                        // Navigate to the results screen
-                        navController.navigate(Screen.Results.route) // Use actual route for results
+                        navController.navigate(Screen.Results.route)
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp)

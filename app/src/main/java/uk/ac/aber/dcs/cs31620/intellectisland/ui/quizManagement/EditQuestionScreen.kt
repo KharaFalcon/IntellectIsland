@@ -1,6 +1,7 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement
 import QuestionViewModel
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
@@ -19,97 +20,44 @@ fun EditQuestionScreen(
     questionId: Int,
     questionViewModel: QuestionViewModel = viewModel()
 ) {
-    // Observe the selected question based on its ID
+    // Fetch the question data by ID
     val question by questionViewModel.getQuestionById(questionId).observeAsState()
 
-    // Track modified values
-    var questionText by remember { mutableStateOf(question?.questionText ?: "") }
-    var options by remember { mutableStateOf(question?.options ?: listOf("", "", "", "")) }
+    question?.let { questionData ->
+        val editedText = remember { mutableStateOf(questionData.questionText) }
 
-    // Track changes to each option
-    val optionFields = remember { mutableStateListOf(*options.toTypedArray()) }
-
-    // Handle update of question and options
-    val scope = rememberCoroutineScope()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Edit Question",
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Edit Question Text
-        OutlinedTextField(
-            value = questionText,
-            onValueChange = { questionText = it },
-            label = { Text("Question Text") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Edit Options
-        optionFields.forEachIndexed { index, option ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "Edit Question",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            TextField(
+                value = editedText.value,
+                onValueChange = { editedText.value = it },
+                label = { Text("Edit your question") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = {
+                    // Save changes
+                    val updatedQuestion = questionData.copy(questionText = editedText.value)
+                    questionViewModel.updateQuestion(updatedQuestion)
+                    navController.popBackStack()
+                    // navController.navigate(route = Screen..route)
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                OutlinedTextField(
-                    value = option,
-                    onValueChange = { newOption -> optionFields[index] = newOption },
-                    label = { Text("Option ${index + 1}") },
-                    modifier = Modifier.weight(1f)
-                )
-
-                IconButton(
-                    onClick = {
-                        // Edit Option logic
-                    },
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit Option"
-                    )
-                }
+                Text("Save")
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Save Button
-        Button(
-            onClick = {
-                val updatedQuestion = QuestionData(
-                    id = questionId,
-                    questionText = questionText,
-                    options = optionFields.toList(),
-                    correctAnswerIndex = question?.correctAnswerIndex ?: 0
-                )
-                questionViewModel.updateQuestion(updatedQuestion)
-                navController.popBackStack()  // Go back to previous screen after saving
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Save Changes")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Cancel Button
-        OutlinedButton(
-            onClick = { navController.popBackStack() },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Cancel")
         }
     }
 }

@@ -1,4 +1,4 @@
-package uk.ac.aber.dcs.cs31620.intellectisland.ui.components
+package uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ButtonDefaults
@@ -14,7 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.MainTopNavigationBar
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.TopLevelScaffold
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
 @Composable
 fun HomeScreen(navController: NavHostController) {

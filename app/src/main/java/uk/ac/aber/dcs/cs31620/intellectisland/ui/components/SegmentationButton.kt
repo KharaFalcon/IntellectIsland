@@ -26,7 +26,7 @@ fun SegmentationButton(
     val icons = listOf(Icons.Default.Add, Icons.Default.Edit, Icons.Default.Delete)
     val destinations = listOf(
         Screen.AddQuestions.route,
-        Screen.EditQuestionScreen.route,
+        Screen.EditQuestions.route,
         Screen.RemoveQuestions.route
     ) // Navigation routes for each button
 

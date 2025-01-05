@@ -24,7 +24,7 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.TopLevelScaffold
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
 @Composable
-fun RemoveQuestions(navController: NavHostController, questionViewModel: QuestionViewModel = viewModel()) {
+fun EditQuestions(navController: NavHostController, questionViewModel: QuestionViewModel = viewModel()) {
     // Observe questions from the ViewModel
     val questions by questionViewModel.allQuestions.observeAsState(emptyList())
     val coroutineScope = rememberCoroutineScope()
@@ -43,7 +43,7 @@ fun RemoveQuestions(navController: NavHostController, questionViewModel: Questio
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "Remove Questions",
+                    text = "Edit Questions",
                     color = Color.Black,
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier
@@ -66,7 +66,7 @@ fun RemoveQuestions(navController: NavHostController, questionViewModel: Questio
                     questions = questions,
                     onEditButtonClick = { question ->
                         navController.navigate("editQuestionScreen/${question.id}")
-                    }, "delete"
+                    }, "edit"
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
