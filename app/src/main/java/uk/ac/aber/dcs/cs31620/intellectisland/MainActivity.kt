@@ -6,9 +6,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.HomeScreen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.UserProfile
@@ -47,13 +49,22 @@ private fun BuildNavigationGraph() {
         composable(Screen.Question.route) { Question(navController) }
         composable(Screen.RemoveQuestions.route) { RemoveQuestions(navController) }
         composable(Screen.AddQuestions.route) { AddQuestions(navController) }
-        composable(Screen.EditQuestionScreen.route + "/{questionId}") { backStackEntry ->
-            val questionId = backStackEntry.arguments?.getString("questionId")?.toInt() ?: -1
-            EditQuestionScreen(navController, questionId)
-        }
         composable(Screen.EditQuestions.route) { EditQuestions(navController) }
         //composable(Screen.EditQuestionScreen.route) { EditQuestionScreen(navController) }
         composable(Screen.EditAnswers.route) { EditAnswers(navController) }
         composable(Screen.Results.route) { Results(navController) }
+        composable(
+            route = "editQuestionScreen/{questionId}",
+            arguments = listOf(navArgument("questionId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val questionId = backStackEntry.arguments?.getInt("questionId")
+            questionId?.let {
+                EditQuestionScreen(
+                    questionId = it,
+                    navController = navController
+                )
+            }
+        }
+
         composable(Screen.UserProfile.route) { UserProfile(navController) }
     }}

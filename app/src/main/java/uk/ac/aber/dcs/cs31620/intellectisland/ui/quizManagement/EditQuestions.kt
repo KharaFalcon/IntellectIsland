@@ -1,6 +1,7 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement
 import QuestionViewModel
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,7 +28,6 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
 @Composable
 fun EditQuestions(navController: NavHostController, questionViewModel: QuestionViewModel = viewModel()) {
-    // Observe questions from the ViewModel
     val questions by questionViewModel.allQuestions.observeAsState(emptyList())
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -42,22 +42,9 @@ fun EditQuestions(navController: NavHostController, questionViewModel: QuestionV
                     .fillMaxSize()
                     .padding(innerPadding)
                     .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(
-                    text = "Edit Questions",
-                    color = Color.Black,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier
-                        .padding(top = 20.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    thickness = 1.dp,
-                    color = Color.Gray
-                )
                 Spacer(modifier = Modifier.height(20.dp))
                 // Segmentation Button
                 SegmentationButton(
@@ -65,26 +52,67 @@ fun EditQuestions(navController: NavHostController, questionViewModel: QuestionV
                     navController = navController
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                QuestionsList(
-                    questions = questions,
-                    onEditButtonClick = { question ->
-                        navController.navigate("editQuestionScreen/${question.id}")
-                    }, "edit"
+                Text(
+                    text = "Edit Questions",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier
+                        .padding(top = 20.dp)
+                        .align(Alignment.CenterHorizontally)
                 )
+                Spacer(modifier = Modifier.height(20.dp))
+
+                if (questions.isNotEmpty()) {
+                    questions.forEach { question ->
+                        QuestionListItem(
+                            question = question,
+                            onClick = { navController.navigate("editQuestionScreen/${question.id}") }
+                        )
+                    }
+                } else {
+                    Text(
+                        text = "No questions available.",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = { /* Handle Next Button Click */ },
+                    onClick = { navController.navigate("nextScreen") },
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text(
-                        text = "Next",
-                        modifier = Modifier
-                            .padding(horizontal = 80.dp)
-                    )
+                    Text(text = "Next", modifier = Modifier.padding(horizontal = 80.dp))
                 }
             }
         }
     )
+}
+
+@Composable
+fun QuestionListItem(question: QuestionData, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = question.questionText,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f)
+            )
+            IconButton(onClick = onClick) {
+                Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit Question")
+            }
+        }
+    }
 }

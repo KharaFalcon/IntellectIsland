@@ -44,6 +44,13 @@ fun RemoveQuestions(navController: NavHostController, questionViewModel: Questio
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                Spacer(modifier = Modifier.height(20.dp))
+                // Segmentation Button
+                SegmentationButton(
+                    modifier = Modifier,
+                    navController = navController
+                )
+                Spacer(modifier = Modifier.height(20.dp))
                 Text(
                     text = "Remove Questions",
                     color = Color.Black,
@@ -58,13 +65,6 @@ fun RemoveQuestions(navController: NavHostController, questionViewModel: Questio
                     thickness = 1.dp,
                     color = Color.Gray
                 )
-                Spacer(modifier = Modifier.height(20.dp))
-                // Segmentation Button
-                SegmentationButton(
-                    modifier = Modifier,
-                    navController = navController
-                )
-                Spacer(modifier = Modifier.height(20.dp))
                 QuestionsList(
                     questions = questions,
                     onEditButtonClick = { question ->

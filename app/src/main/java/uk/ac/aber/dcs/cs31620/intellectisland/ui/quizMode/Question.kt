@@ -20,8 +20,11 @@ import androidx.navigation.NavHostController
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.MainTopNavigationBar
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.QuestionProgressBar
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inverseOnSurfaceLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inversePrimaryLight
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.onSecondaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.secondaryContainerLight
 
 @Composable
 fun Question(
@@ -64,7 +67,7 @@ fun Question(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .background(
-                        color = inversePrimaryLight, // Light blue color
+                        color = secondaryContainerLight, // Light blue color
                         shape = RoundedCornerShape(10.dp)
                     )
                     .padding(16.dp) // Inner padding for content
@@ -82,6 +85,10 @@ fun Question(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .background(
+                                        color = inverseOnSurfaceLight, // Light blue color
+
+                                    )
                                     .padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -90,7 +97,7 @@ fun Question(
                                     modifier = Modifier
                                         .size(40.dp)
                                         .background(
-                                            color = MaterialTheme.colorScheme.primary, // Circle color
+                                            color = secondaryContainerLight,
                                             shape = CircleShape
                                         ),
                                     contentAlignment = Alignment.Center
@@ -98,7 +105,7 @@ fun Question(
                                     Text(
                                         text = ('A' + index).toString(),
                                         style = MaterialTheme.typography.bodyLarge,
-                                        color = Color.White, // Text color
+                                        color = onSecondaryContainerLight,
                                         textAlign = TextAlign.Center
                                     )
                                 }

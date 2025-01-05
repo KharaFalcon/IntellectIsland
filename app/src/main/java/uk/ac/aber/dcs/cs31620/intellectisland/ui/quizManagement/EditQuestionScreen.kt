@@ -13,51 +13,37 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionData
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.EditableQuestionItem
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.SegmentationButton
 
 @Composable
 fun EditQuestionScreen(
-    navController: NavHostController,
     questionId: Int,
+    navController: NavHostController,
     questionViewModel: QuestionViewModel = viewModel()
 ) {
-    // Fetch the question data by ID
     val question by questionViewModel.getQuestionById(questionId).observeAsState()
-
-    question?.let { questionData ->
-        val editedText = remember { mutableStateOf(questionData.questionText) }
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = "Edit Question",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            TextField(
-                value = editedText.value,
-                onValueChange = { editedText.value = it },
-                label = { Text("Edit your question") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = {
-                    // Save changes
-                    val updatedQuestion = questionData.copy(questionText = editedText.value)
-                    questionViewModel.updateQuestion(updatedQuestion)
-                    navController.popBackStack()
-                    // navController.navigate(route = Screen..route)
-                },
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text("Save")
+    Spacer(modifier = Modifier.height(20.dp))
+    // Segmentation Button
+    SegmentationButton(
+        modifier = Modifier,
+        navController = navController
+    )
+    Spacer(modifier = Modifier.height(20.dp))
+    question?.let {
+        EditableQuestionItem(navController,
+            question = it,
+            onQuestionChange = { updatedQuestion ->
+                questionViewModel.updateQuestion(updatedQuestion)
+                navController.popBackStack() // Navigate back after saving
             }
-        }
+        )
+    } ?: run {
+        Text(
+            text = "Loading question...",
+            modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.Center)
+        )
     }
 }
+
+

@@ -45,6 +45,7 @@ fun QuestionsList(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
+
                 ) {
                     Box(
                         modifier = Modifier
