@@ -22,11 +22,10 @@ fun SegmentationButton(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-    val options = listOf("Add", "Edit", "Delete")
-    val icons = listOf(Icons.Default.Add, Icons.Default.Edit, Icons.Default.Delete)
+    val options = listOf("Add", "Edit")
+    val icons = listOf(Icons.Default.Add, Icons.Default.Edit)
     val destinations = listOf(
         Screen.AddQuestions.route,
-        Screen.EditQuestions.route,
         Screen.RemoveQuestions.route
     ) // Navigation routes for each button
 

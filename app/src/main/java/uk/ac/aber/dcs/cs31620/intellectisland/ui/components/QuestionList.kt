@@ -22,12 +22,11 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.onSurfaceLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.outlineVariantLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.secondaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.surfaceLight
-
 @Composable
 fun QuestionsList(
     questions: List<QuestionData>,
     onEditButtonClick: (QuestionData) -> Unit,
-    icon: String
+    onDeleteButtonClick: (QuestionData) -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         questions.forEachIndexed { index, question ->
@@ -45,7 +44,6 @@ fun QuestionsList(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
-
                 ) {
                     Box(
                         modifier = Modifier
@@ -71,17 +69,26 @@ fun QuestionsList(
                             style = MaterialTheme.typography.bodyLarge
                         )
                         Spacer(modifier = Modifier.height(4.dp))
-
                     }
-
-                    IconButton(
-                        onClick = { onEditButtonClick(question) }
-                    ) {
-                        Icon(
-                            imageVector = if (icon == "edit") Icons.Default.Edit else Icons.Default.Delete,
-                            contentDescription = if (icon == "edit") "Edit Question" else "Delete Question",
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
+                    Row {
+                        IconButton(
+                            onClick = { onEditButtonClick(question) }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "Edit Question",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        IconButton(
+                            onClick = { onDeleteButtonClick(question) }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete Question",
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                        }
                     }
                 }
             }

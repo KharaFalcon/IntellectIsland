@@ -4,8 +4,10 @@ import QuestionViewModel
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -25,7 +27,6 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inversePrimaryLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.onSecondaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.secondaryContainerLight
-
 @Composable
 fun Question(
     navController: NavHostController,
@@ -42,6 +43,7 @@ fun Question(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(top = 150.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -87,7 +89,6 @@ fun Question(
                                     .fillMaxWidth()
                                     .background(
                                         color = inverseOnSurfaceLight, // Light blue color
-
                                     )
                                     .padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically
@@ -119,15 +120,16 @@ fun Question(
                                     fontSize = 16.sp
                                 )
 
-                                // Radio button
                                 RadioButton(
                                     selected = selectedAnswerIndex == index,
                                     onClick = {
                                         selectedAnswerIndex = index
-                                        viewModel.saveUserAnswer(question.id, index)
-                                        Log.d("QuestionScreen", "Selected Option: $option at index $index")
+                                        viewModel.saveAnswer(question.id, index) // Save the selected answer
                                     }
                                 )
+
+
+
                             }
                         }
                     }
@@ -163,19 +165,16 @@ fun Question(
                             )
                         }
                     }
-
-                    // Next button
                     Button(
                         onClick = {
                             if (selectedAnswerIndex == -1) {
-                                viewModel.saveUserAnswer(currentQuestion!!.id, -1)
+                                viewModel.saveAnswer(currentQuestion!!.id, -1)
                             } else {
-                                viewModel.saveUserAnswer(currentQuestion!!.id, selectedAnswerIndex)
+                                viewModel.saveAnswer(currentQuestion!!.id, selectedAnswerIndex)
                             }
                             if (currentQuestionIndex < questionList.size - 1) {
                                 currentQuestionIndex++
                             } else {
-                                // Navigate to the Results screen when Submit is clicked
                                 navController.navigate(Screen.Results.route) // Navigate to the Results screen
                             }
                         },
@@ -190,9 +189,4 @@ fun Question(
                             fontSize = 16.sp,
                             color = Color.White
                         )
-                    }
-                }
-            }
-        }
-    }
-}
+                    }}}}}}

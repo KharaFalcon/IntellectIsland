@@ -43,7 +43,7 @@ fun MainBottomNavigationBar(
             outlineIcon = Icons.Outlined.Quiz,
             label = stringResource(id = R.string.quiz_mode)
         ),
-        Screen.EditQuestions to IconGroup(
+        Screen.RemoveQuestions to IconGroup(
             filledIcon = Icons.Filled.EditNote,
             outlineIcon = Icons.Outlined.EditNote,
             label = stringResource(R.string.management_mode)

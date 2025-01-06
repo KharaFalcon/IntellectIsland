@@ -8,5 +8,7 @@ data class QuestionData(
     @PrimaryKey(autoGenerate = true)  val id: Int = 0,
     val questionText: String,
     val options: List<String>,
-    val correctAnswerIndex: Int
+    val correctAnswerIndex: Int,
+    var selectedAnswerIndex: Int,
+    val userName: String // The user's name
 )

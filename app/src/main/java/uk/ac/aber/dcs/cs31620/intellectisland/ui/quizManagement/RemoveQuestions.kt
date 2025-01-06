@@ -27,10 +27,12 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
 @Composable
 fun RemoveQuestions(navController: NavHostController, questionViewModel: QuestionViewModel = viewModel()) {
-    // Observe questions from the ViewModel
     val questions by questionViewModel.allQuestions.observeAsState(emptyList())
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var questionToDelete by remember { mutableStateOf<QuestionData?>(null) }
 
     TopLevelScaffold(
         navController = navController,
@@ -45,7 +47,6 @@ fun RemoveQuestions(navController: NavHostController, questionViewModel: Questio
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-                // Segmentation Button
                 SegmentationButton(
                     modifier = Modifier,
                     navController = navController
@@ -69,9 +70,12 @@ fun RemoveQuestions(navController: NavHostController, questionViewModel: Questio
                     questions = questions,
                     onEditButtonClick = { question ->
                         navController.navigate("editQuestionScreen/${question.id}")
-                    }, "delete"
+                    },
+                    onDeleteButtonClick = { question ->
+                        showDeleteDialog = true
+                        questionToDelete = question
+                    }
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = { /* Handle Next Button Click */ },
@@ -84,6 +88,31 @@ fun RemoveQuestions(navController: NavHostController, questionViewModel: Questio
                             .padding(horizontal = 80.dp)
                     )
                 }
+            }
+
+            if (showDeleteDialog) {
+                AlertDialog(
+                    onDismissRequest = { showDeleteDialog = false },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                questionToDelete?.let {
+                                    questionViewModel.deleteQuestion(it)
+                                }
+                                showDeleteDialog = false
+                            }
+                        ) {
+                            Text("Delete")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showDeleteDialog = false }) {
+                            Text("Cancel")
+                        }
+                    },
+                    title = { Text("Confirm Deletion") },
+                    text = { Text("Are you sure you want to delete this question? This action cannot be undone.") }
+                )
             }
         }
     )

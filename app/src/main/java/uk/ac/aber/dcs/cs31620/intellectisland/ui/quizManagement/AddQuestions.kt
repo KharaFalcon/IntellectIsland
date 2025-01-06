@@ -29,9 +29,8 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.surfaceLight
 fun AddQuestions(navController: NavHostController) {
     val questionViewModel: QuestionViewModel = viewModel()
     var questionText by remember { mutableStateOf("") }
-    // Using remember with mutableStateOf to hold the list of options
     var options by remember { mutableStateOf(MutableList(4) { "" }) }
-    var selectedCorrectAnswer by remember { mutableStateOf(0) } // Tracks the selected correct answer index
+    var selectedCorrectAnswer by remember { mutableStateOf(0) }
     val allQuestions by questionViewModel.allQuestions.observeAsState(emptyList())
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -78,7 +77,6 @@ fun AddQuestions(navController: NavHostController) {
                         OutlinedTextField(
                             value = option,
                             onValueChange = { newOption ->
-                                // Update the specific option in the list
                                 options = options.toMutableList().apply { this[index] = newOption }
                             },
                             label = { Text("Option ${index + 1}") },
@@ -101,12 +99,16 @@ fun AddQuestions(navController: NavHostController) {
 
                         coroutineScope.launch {
                             try {
-                                val questionId = questionViewModel.insertQuestion(
+                                // Call the correct method to insert the question
+                                questionViewModel.insertSingleQuestion(
                                     QuestionData(
                                         questionText = questionText,
                                         options = options,
-                                        correctAnswerIndex = selectedCorrectAnswer
+                                        correctAnswerIndex = selectedCorrectAnswer,
+                                        selectedAnswerIndex = -1, // Placeholder if you don't need this field for now
+                                        userName = "" // You can add a user name if needed
                                     )
+
                                 )
                                 snackbarHostState.showSnackbar("Question added successfully!")
 
@@ -134,6 +136,7 @@ fun AddQuestions(navController: NavHostController) {
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
+                // Display all questions in the bank
                 allQuestions.forEach { question ->
                     Card(
                         modifier = Modifier

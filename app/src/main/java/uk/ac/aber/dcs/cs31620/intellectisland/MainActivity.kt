@@ -1,6 +1,5 @@
 package uk.ac.aber.dcs.cs31620.intellectisland
 
-import Results
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,9 +16,9 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.UserProfile
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.AddQuestions
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.EditAnswers
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.EditQuestionScreen
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.EditQuestions
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement.RemoveQuestions
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode.Question
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode.Results
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode.StartQuiz
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.IntellectIslandTheme
 
@@ -49,22 +48,14 @@ private fun BuildNavigationGraph() {
         composable(Screen.Question.route) { Question(navController) }
         composable(Screen.RemoveQuestions.route) { RemoveQuestions(navController) }
         composable(Screen.AddQuestions.route) { AddQuestions(navController) }
-        composable(Screen.EditQuestions.route) { EditQuestions(navController) }
         //composable(Screen.EditQuestionScreen.route) { EditQuestionScreen(navController) }
         composable(Screen.EditAnswers.route) { EditAnswers(navController) }
         composable(Screen.Results.route) { Results(navController) }
-        composable(
-            route = "editQuestionScreen/{questionId}",
-            arguments = listOf(navArgument("questionId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val questionId = backStackEntry.arguments?.getInt("questionId")
-            questionId?.let {
-                EditQuestionScreen(
-                    questionId = it,
-                    navController = navController
-                )
-            }
+        composable("edit_question_screen/{questionId}") { backStackEntry ->
+            val questionId = backStackEntry.arguments?.getString("questionId")?.toIntOrNull() ?: return@composable
+            EditQuestionScreen(questionId = questionId, navController = navController)
         }
+
 
         composable(Screen.UserProfile.route) { UserProfile(navController) }
     }}
