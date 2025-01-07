@@ -1,13 +1,13 @@
 
 // IntellectIslandRoomDatabase.kt
-package uk.ac.aber.dcs.cs31620.intellectisland.datasource1
+package uk.ac.aber.dcs.cs31620.intellectisland.datasource
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionData
+import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
 
 @Database(entities = [QuestionData::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)

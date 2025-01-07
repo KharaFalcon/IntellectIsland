@@ -57,35 +57,11 @@ fun DropDownMenu(navController: NavHostController, onClick: () -> Unit) {
                 text = { Text("Settings") },
                 onClick = {
                     expanded = false // Close the menu
-                    // Navigate to Log Out screen or perform log out
-                  //  navController.navigate(Screen.LogOut.route)
+                    navController.navigate(Screen.UserProfile.route)
                 },
                 leadingIcon = { Icon(Icons.Outlined.Settings, contentDescription = "Settings Icon") }
             )
 
-            // Exit Quiz Menu Item
-            DropdownMenuItem(
-                text = { Text("Exit Quiz") },
-                onClick = {
-                    expanded = false // Close the menu
-                    // Logic to exit the quiz (you may need to use a ViewModel or navigate)
-                },
-                leadingIcon = { Icon(Icons.Outlined.Delete, contentDescription = "Settings Icon") }
-            )
-
-            // Divider
-            HorizontalDivider()
-
-            // Send Feedback Menu Item
-            DropdownMenuItem(
-                text = { Text("Send Feedback") },
-                onClick = {
-                    expanded = false // Close the menu
-                    // Logic to send feedback (could open a feedback form)
-                },
-                leadingIcon = { Icon(Icons.Outlined.Email, contentDescription = "Email Icon") },
-                trailingIcon = { Text("F11", textAlign = TextAlign.Center) }
-            )
         }
     }
 }

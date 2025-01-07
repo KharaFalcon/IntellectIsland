@@ -1,11 +1,12 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement
 
-import QuestionViewModel
-import androidx.compose.foundation.background
+import uk.ac.aber.dcs.cs31620.intellectisland.viewmodel.QuestionViewModel
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -17,20 +18,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
-import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionData
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.MainTopNavigationBar
+import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.SegmentationButton
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.TopLevelScaffold
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.surfaceLight
-
 @Composable
 fun AddQuestions(navController: NavHostController) {
     val questionViewModel: QuestionViewModel = viewModel()
     var questionText by remember { mutableStateOf("") }
-    var options by remember { mutableStateOf(MutableList(4) { "" }) }
-    var selectedCorrectAnswer by remember { mutableStateOf(0) }
+    var options by remember { mutableStateOf(MutableList(1) { "" }) }
+    var selectedCorrectAnswer by remember { mutableStateOf(-1) } // Start with -1 for no selection
     val allQuestions by questionViewModel.allQuestions.observeAsState(emptyList())
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -81,18 +78,66 @@ fun AddQuestions(navController: NavHostController) {
                             },
                             label = { Text("Option ${index + 1}") },
                             modifier = Modifier
-                                .fillMaxWidth()
+                                .weight(1f)
                                 .padding(vertical = 4.dp),
                             singleLine = true
                         )
+                        if (options.size > 1) {
+                            IconButton(onClick = {
+                                options = options.toMutableList().apply { removeAt(index) }
+                                if (selectedCorrectAnswer == index) {
+                                    selectedCorrectAnswer = -1 // Reset correct answer if removed
+                                } else if (selectedCorrectAnswer > index) {
+                                    selectedCorrectAnswer-- // Adjust correct answer index
+                                }
+                            }) {
+                                Icon(Icons.Default.Delete, contentDescription = "Remove option")
+                            }
+                        }
                     }
+                }
+
+                if (options.size < 10) {
+                    Button(
+                        onClick = {
+                            options = options.toMutableList().apply { add("") }
+                        },
+                        modifier = Modifier.padding(top = 8.dp)
+                    ) {
+                        Text("Add Option")
+                    }
+                } else {
+                    Text(
+                        text = "You can only add up to 10 options.",
+                        color = Color.Red,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
                 }
 
                 OutlinedButton(
                     onClick = {
-                        if (questionText.isBlank() || options.any { it.isBlank() }) {
+                        if (questionText.isBlank()) {
                             coroutineScope.launch {
-                                snackbarHostState.showSnackbar("Please fill out all fields.")
+                                snackbarHostState.showSnackbar("Please enter a question.")
+                            }
+                            return@OutlinedButton
+                        }
+                        if (options.any { it.isBlank() }) {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("Please fill out all options.")
+                            }
+                            return@OutlinedButton
+                        }
+                        if (options.size < 1) {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("Please provide at least one option.")
+                            }
+                            return@OutlinedButton
+                        }
+                        if (selectedCorrectAnswer < 0 || selectedCorrectAnswer >= options.size) {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("Please select a correct answer.")
                             }
                             return@OutlinedButton
                         }
@@ -108,14 +153,13 @@ fun AddQuestions(navController: NavHostController) {
                                         selectedAnswerIndex = -1, // Placeholder if you don't need this field for now
                                         userName = "" // You can add a user name if needed
                                     )
-
                                 )
                                 snackbarHostState.showSnackbar("Question added successfully!")
 
                                 // Clear input fields after success
                                 questionText = ""
-                                options = MutableList(4) { "" }
-                                selectedCorrectAnswer = 0
+                                options = MutableList(1) { "" }
+                                selectedCorrectAnswer = -1
                             } catch (e: Exception) {
                                 snackbarHostState.showSnackbar("Failed to add question: ${e.message}")
                             }

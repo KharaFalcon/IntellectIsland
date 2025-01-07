@@ -1,12 +1,14 @@
+package uk.ac.aber.dcs.cs31620.intellectisland.viewmodel
+
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import uk.ac.aber.dcs.cs31620.intellectisland.datasource1.IntellectIslandRoomDatabase
-import uk.ac.aber.dcs.cs31620.intellectisland.datasource1.QuestionDao
-import uk.ac.aber.dcs.cs31620.intellectisland.datasource1.util.QuestionRepository
-import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionData
+import uk.ac.aber.dcs.cs31620.intellectisland.datasource.IntellectIslandRoomDatabase
+import uk.ac.aber.dcs.cs31620.intellectisland.datasource.QuestionDao
+import uk.ac.aber.dcs.cs31620.intellectisland.datasource.QuestionRepository
+import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
 
 class QuestionViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -66,4 +68,35 @@ class QuestionViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch(Dispatchers.IO) {
             questionDao.insertSingleQuestion(question)
         }
-    }}
+    }
+
+    fun getQuestionsWithCorrectness(): LiveData<List<Pair<QuestionData, Boolean>>> {
+        val questionsWithCorrectness = MutableLiveData<List<Pair<QuestionData, Boolean>>>()
+        viewModelScope.launch(Dispatchers.IO) {
+            val questions = questionRepository.getAllQuestionsSync()
+            val result = questions.map { question ->
+                question to (question.correctAnswerIndex == question.selectedAnswerIndex)
+            }
+            questionsWithCorrectness.postValue(result)
+        }
+        return questionsWithCorrectness
+    }
+
+
+    fun getUserAnswersByName(userName: String): LiveData<List<QuestionData>> {
+        return questionRepository.getUserAnswersByName(userName)
+    }
+
+    fun clearUserAnswersByName(userName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            questionRepository.clearUserAnswersByName(userName)
+        }
+    }
+
+    fun updateQuestionUserName(questionId: Int, userName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            questionRepository.updateQuestionUserName(questionId, userName)
+        }
+    }
+
+}

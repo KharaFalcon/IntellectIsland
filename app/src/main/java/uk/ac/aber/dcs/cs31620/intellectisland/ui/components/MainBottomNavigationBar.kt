@@ -1,11 +1,13 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.components
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Quiz
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.EditNote
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Map
@@ -43,40 +45,38 @@ fun MainBottomNavigationBar(
             outlineIcon = Icons.Outlined.Quiz,
             label = stringResource(id = R.string.quiz_mode)
         ),
-        Screen.RemoveQuestions to IconGroup(
-            filledIcon = Icons.Filled.EditNote,
-            outlineIcon = Icons.Outlined.EditNote,
+        Screen.AddQuestions to IconGroup(
+            filledIcon = Icons.Filled.Edit,
+            outlineIcon = Icons.Outlined.Edit,
             label = stringResource(R.string.management_mode)
         )
     )
+
+    val screens = listOf(Screen.HomeScreen, Screen.StartQuiz, Screen.AddQuestions)
 
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
 
-        // Loop through each screen to create a navigation item
-        listOf(Screen.HomeScreen, Screen.StartQuiz, Screen.EditQuestionScreen).forEach { screen ->
-            val isSelected = currentDestination
-                ?.hierarchy?.any { it.route == screen.route } == true
-
-            // Use safe access to get the corresponding IconGroup
+        screens.forEach { screen ->
+            val isSelected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
             val iconGroup = icons[screen]
-            val labelText = iconGroup?.label ?: "Unknown"
 
             NavigationBarItem(
                 icon = {
                     Icon(
-                        imageVector = iconGroup?.let {
-                            if (isSelected) it.filledIcon else it.outlineIcon
-                        } ?: Icons.Default.Error, // Default icon if null
-                        contentDescription = labelText
+                        imageVector = if (isSelected) {
+                            iconGroup?.filledIcon ?: Icons.Default.Error
+                        } else {
+                            iconGroup?.outlineIcon ?: Icons.Default.Error
+                        },
+                        contentDescription = iconGroup?.label ?: "Unknown"
                     )
                 },
-                label = { Text(labelText) },
+                label = { Text(iconGroup?.label ?: "Unknown") },
                 selected = isSelected,
                 onClick = {
                     navController.navigate(screen.route) {
-                        // Pop up to the start destination and reset the navigation stack
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }

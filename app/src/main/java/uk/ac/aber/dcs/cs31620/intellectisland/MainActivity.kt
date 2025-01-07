@@ -1,10 +1,12 @@
 package uk.ac.aber.dcs.cs31620.intellectisland
 
+import UserName
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,6 +23,7 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode.Question
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode.Results
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode.StartQuiz
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.IntellectIslandTheme
+import uk.ac.aber.dcs.cs31620.intellectisland.viewmodel.QuestionViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,12 +39,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun BuildNavigationGraph() {
+private fun BuildNavigationGraph(    questionViewModel : QuestionViewModel = viewModel()) {
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = Screen.HomeScreen.route
+        startDestination = Screen.UserName.route
     ) {
         composable(Screen.HomeScreen.route) { HomeScreen(navController) }
         composable(Screen.StartQuiz.route) { StartQuiz(navController) }
@@ -51,6 +54,7 @@ private fun BuildNavigationGraph() {
         //composable(Screen.EditQuestionScreen.route) { EditQuestionScreen(navController) }
         composable(Screen.EditAnswers.route) { EditAnswers(navController) }
         composable(Screen.Results.route) { Results(navController) }
+        composable(Screen.UserName.route) { UserName(navController, questionViewModel) }
         composable("edit_question_screen/{questionId}") { backStackEntry ->
             val questionId = backStackEntry.arguments?.getString("questionId")?.toIntOrNull() ?: return@composable
             EditQuestionScreen(questionId = questionId, navController = navController)

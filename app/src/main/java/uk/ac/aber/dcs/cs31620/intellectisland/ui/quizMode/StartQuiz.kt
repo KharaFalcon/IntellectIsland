@@ -1,6 +1,6 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode
 
-import QuestionViewModel
+import uk.ac.aber.dcs.cs31620.intellectisland.viewmodel.QuestionViewModel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

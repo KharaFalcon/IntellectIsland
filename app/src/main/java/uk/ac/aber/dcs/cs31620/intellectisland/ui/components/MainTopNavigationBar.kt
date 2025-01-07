@@ -2,6 +2,7 @@ package uk.ac.aber.dcs.cs31620.intellectisland.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -61,10 +62,15 @@ fun MainTopNavigationBar(navController: NavHostController, onClick: () -> Unit =
                     .size(380.dp) // Size of the profile icon
                     .clip(CircleShape) // Circular profile image
                     .padding(start = 340.dp, top = 10.dp, bottom = 10.dp) // Padding from the right edge
-                    .border(3.dp, MaterialTheme.colorScheme.primary, CircleShape),
-                painter = painterResource(id = R.drawable.profile_icon), // Replace with your profile image resource
+                    .border(3.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                    .clickable {
+                        // Navigate to the user profile screen
+                        navController.navigate("userProfile")
+                    },
+                painter = painterResource(id = R.drawable.av5), // Replace with your profile image resource
                 contentDescription = stringResource(R.string.profile_icon_image),
-                contentScale = ContentScale.Crop,// Correct content description
+                contentScale = ContentScale.Crop,//
+                // Correct content description
             )
         },
 

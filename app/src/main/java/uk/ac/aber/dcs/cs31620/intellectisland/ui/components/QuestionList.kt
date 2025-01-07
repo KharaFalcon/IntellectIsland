@@ -13,12 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionData
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inverseOnSurfaceLight
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.onPrimaryContainerLight
+import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.onSecondaryContainerLight
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.onSurfaceLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.outlineVariantLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.secondaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.surfaceLight

@@ -1,9 +1,9 @@
 
-package uk.ac.aber.dcs.cs31620.intellectisland.datasource1
+package uk.ac.aber.dcs.cs31620.intellectisland.datasource
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionData
+import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
 @Dao
 interface QuestionDao {
 
@@ -35,6 +35,10 @@ interface QuestionDao {
     @Query("DELETE FROM questions WHERE id = :id")
     suspend fun deleteQuestionById(id: Int)
 
+    @Query("UPDATE questions SET selectedAnswerIndex = :selectedAnswerIndex WHERE id = :questionId")
+    suspend fun updateSelectedAnswer(questionId: Int, selectedAnswerIndex: Int)
+    @Query("SELECT * FROM questions")
+    suspend fun getAllQuestionsSync(): List<QuestionData>
 
     @Query("SELECT * FROM questions WHERE userName = :userName")
     fun getUserAnswersByName(userName: String): LiveData<List<QuestionData>>
@@ -42,9 +46,7 @@ interface QuestionDao {
     @Query("DELETE FROM questions WHERE userName = :userName")
     suspend fun clearUserAnswersByName(userName: String)
 
-    @Query("UPDATE questions SET selectedAnswerIndex = :selectedAnswerIndex WHERE id = :questionId")
-    suspend fun updateSelectedAnswer(questionId: Int, selectedAnswerIndex: Int)
-    @Query("SELECT * FROM questions")
-    suspend fun getAllQuestionsSync(): List<QuestionData>
+    @Query("UPDATE questions SET userName = :userName WHERE id = :questionId")
+    suspend fun updateQuestionUserName(questionId: Int, userName: String)
 
 }

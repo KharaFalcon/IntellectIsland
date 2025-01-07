@@ -1,4 +1,4 @@
-package uk.ac.aber.dcs.cs31620.intellectisland.model
+package uk.ac.aber.dcs.cs31620.intellectisland.datasource.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -10,5 +10,5 @@ data class QuestionData(
     val options: List<String>,
     val correctAnswerIndex: Int,
     var selectedAnswerIndex: Int,
-    val userName: String // The user's name
+    val userName: String// The user's name
 )

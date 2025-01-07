@@ -1,4 +1,4 @@
-package uk.ac.aber.dcs.cs31620.intellectisland.datasource1.util
+package uk.ac.aber.dcs.cs31620.intellectisland.datasource
 
 import androidx.room.TypeConverter
 

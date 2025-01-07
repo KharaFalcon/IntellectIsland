@@ -1,7 +1,6 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode
 
-import QuestionViewModel
-import android.util.Log
+import uk.ac.aber.dcs.cs31620.intellectisland.viewmodel.QuestionViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -23,7 +22,6 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.MainTopNavigationBar
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.QuestionProgressBar
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inverseOnSurfaceLight
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inversePrimaryLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.onSecondaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.secondaryContainerLight

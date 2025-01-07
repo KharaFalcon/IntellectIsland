@@ -1,9 +1,8 @@
-package uk.ac.aber.dcs.cs31620.intellectisland.datasource1.util
+package uk.ac.aber.dcs.cs31620.intellectisland.datasource
 
 
 import androidx.lifecycle.LiveData
-import uk.ac.aber.dcs.cs31620.intellectisland.datasource1.QuestionDao
-import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionData
+import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
 class QuestionRepository(private val questionDao: QuestionDao) {
 
     fun getAllQuestions(): LiveData<List<QuestionData>> = questionDao.getAllQuestions()
@@ -20,18 +19,17 @@ class QuestionRepository(private val questionDao: QuestionDao) {
     suspend fun deleteQuestion(question: QuestionData) {
         questionDao.deleteQuestion(question)
     }
-
-    suspend fun deleteQuestionById(questionId: Int) {
-        questionDao.deleteQuestionById(questionId)
-    }
-
     fun getUserAnswersByName(userName: String): LiveData<List<QuestionData>> =
         questionDao.getUserAnswersByName(userName)
-
 
     suspend fun clearUserAnswersByName(userName: String) {
         questionDao.clearUserAnswersByName(userName)
     }
+
+    suspend fun updateQuestionUserName(questionId: Int, userName: String) {
+        questionDao.updateQuestionUserName(questionId, userName)
+    }
+
 
     // Fetch question as LiveData
     fun getQuestionById(questionId: Int): LiveData<QuestionData?> {
@@ -44,6 +42,8 @@ class QuestionRepository(private val questionDao: QuestionDao) {
     suspend fun getAllQuestionsSync(): List<QuestionData> {
         return questionDao.getAllQuestionsSync()
     }
+
+
 
 
 

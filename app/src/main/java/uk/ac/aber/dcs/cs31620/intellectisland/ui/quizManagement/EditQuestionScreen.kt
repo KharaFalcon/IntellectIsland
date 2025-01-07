@@ -1,8 +1,10 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement
 
-import QuestionViewModel
+import uk.ac.aber.dcs.cs31620.intellectisland.viewmodel.QuestionViewModel
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -12,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
-import uk.ac.aber.dcs.cs31620.intellectisland.model.QuestionData
+import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.EditableQuestionItem
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.SegmentationButton
 
@@ -29,14 +31,11 @@ fun EditQuestionScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Navigation Segmentation Button
-        SegmentationButton(
-            modifier = Modifier,
-            navController = navController
-        )
+
 
         Spacer(modifier = Modifier.height(20.dp))
 
