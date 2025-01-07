@@ -1,5 +1,6 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode
 
+import android.util.Log
 import uk.ac.aber.dcs.cs31620.intellectisland.viewmodel.QuestionViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.launch
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.MainTopNavigationBar
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.QuestionProgressBar
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
@@ -30,11 +32,29 @@ fun Question(
     navController: NavHostController,
     viewModel: QuestionViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    val questionList by viewModel.allQuestions.observeAsState(emptyList())
-    var currentQuestionIndex by rememberSaveable { mutableStateOf(0) }
-    val currentQuestion = questionList.getOrNull(currentQuestionIndex)
+    // Observe questions
+    val originalQuestionList by viewModel.allQuestions.observeAsState(emptyList())
+    val shuffledQuestionList = remember(originalQuestionList) {
+        if (originalQuestionList.isNotEmpty()) originalQuestionList.shuffled() else emptyList()
+    }
 
-    var selectedAnswerIndex by rememberSaveable { mutableStateOf(-1) } // -1 means no answer selected
+    // Log to debug issues
+    if (originalQuestionList.isEmpty()) {
+        Log.e("Question", "originalQuestionList is empty")
+    } else {
+        Log.d("Question", "originalQuestionList size: ${originalQuestionList.size}")
+    }
+
+    if (shuffledQuestionList.isEmpty()) {
+        Log.e("Question", "shuffledQuestionList is empty")
+    }
+
+    // State variables for progress
+    var currentQuestionIndex by rememberSaveable { mutableStateOf(0) }
+    val currentQuestion = shuffledQuestionList.getOrNull(currentQuestionIndex)
+    var selectedAnswerIndex by rememberSaveable { mutableStateOf(-1) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     MainTopNavigationBar(navController)
 
@@ -47,9 +67,10 @@ fun Question(
     ) {
         QuestionProgressBar(
             currentQuestionIndex = currentQuestionIndex,
-            totalQuestions = questionList.size
+            totalQuestions = shuffledQuestionList.size
         )
         Spacer(modifier = Modifier.height(32.dp))
+
         currentQuestion?.let { question ->
             Text(
                 text = question.questionText,
@@ -57,20 +78,19 @@ fun Question(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(horizontal = 16.dp),
-                lineHeight = 48.sp // Added line height for better spacing when text wraps
+                lineHeight = 48.sp
             )
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Blue box wrapping the options
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .background(
-                        color = secondaryContainerLight, // Light blue color
+                        color = secondaryContainerLight,
                         shape = RoundedCornerShape(10.dp)
                     )
-                    .padding(16.dp) // Inner padding for content
+                    .padding(16.dp)
             ) {
                 Column {
                     val options = question.options
@@ -85,13 +105,10 @@ fun Question(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(
-                                        color = inverseOnSurfaceLight, // Light blue color
-                                    )
+                                    .background(inverseOnSurfaceLight)
                                     .padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                // Circle with A, B, C, ...
                                 Box(
                                     modifier = Modifier
                                         .size(40.dp)
@@ -111,7 +128,6 @@ fun Question(
 
                                 Spacer(modifier = Modifier.width(16.dp))
 
-                                // Option text
                                 Text(
                                     text = option,
                                     modifier = Modifier.weight(1f),
@@ -122,12 +138,9 @@ fun Question(
                                     selected = selectedAnswerIndex == index,
                                     onClick = {
                                         selectedAnswerIndex = index
-                                        viewModel.saveAnswer(question.id, index) // Save the selected answer
+                                        viewModel.saveAnswer(question.id, index)
                                     }
                                 )
-
-
-
                             }
                         }
                     }
@@ -136,55 +149,53 @@ fun Question(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Navigation buttons
-            if (currentQuestionIndex < questionList.size) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween // Ensures buttons are spaced apart
-                ) {
-                    // Show "Previous" button only if not on the first question
-                    if (currentQuestionIndex > 0) {
-                        Button(
-                            onClick = {
-                                currentQuestionIndex--
-                            },
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 8.dp), // Add spacing between buttons
-                            shape = RoundedCornerShape(10.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight)
-                        ) {
-                            Text(
-                                text = "Previous",
-                                fontSize = 16.sp,
-                                color = Color.White
-                            )
-                        }
-                    }
+            // Navigation Buttons
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                if (currentQuestionIndex > 0) {
                     Button(
                         onClick = {
-                            if (selectedAnswerIndex == -1) {
-                                viewModel.saveAnswer(currentQuestion!!.id, -1)
-                            } else {
-                                viewModel.saveAnswer(currentQuestion!!.id, selectedAnswerIndex)
-                            }
-                            if (currentQuestionIndex < questionList.size - 1) {
-                                currentQuestionIndex++
-                            } else {
-                                navController.navigate(Screen.Results.route) // Navigate to the Results screen
-                            }
+                            currentQuestionIndex--
+                            selectedAnswerIndex = -1 // Reset selection
                         },
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = if (currentQuestionIndex > 0) 8.dp else 0.dp), // Adjust padding when "Previous" is absent
+                        modifier = Modifier.weight(1f).padding(end = 8.dp),
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight)
                     ) {
-                        Text(
-                            text = if (currentQuestionIndex < questionList.size - 1) "Next" else "Submit",
-                            fontSize = 16.sp,
-                            color = Color.White
-                        )
-                    }}}}}}
+                        Text("Previous", fontSize = 16.sp, color = Color.White)
+                    }
+                }
+
+                Button(
+                    onClick = {
+                        if (currentQuestionIndex < shuffledQuestionList.size - 1) {
+                            currentQuestionIndex++
+                            selectedAnswerIndex = -1
+                        } else {
+                            navController.navigate(Screen.Results.route)
+                        }
+                    },
+                    modifier = Modifier.weight(1f).padding(start = if (currentQuestionIndex > 0) 8.dp else 0.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight)
+                ) {
+                    Text(
+                        text = if (currentQuestionIndex < shuffledQuestionList.size - 1) "Next" else "Submit",
+                        fontSize = 16.sp,
+                        color = Color.White
+                    )
+                }
+            }
+        } ?: run {
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar("No question found. Please try again.")
+            }
+        }
+    }
+
+    SnackbarHost(hostState = snackbarHostState)
+}

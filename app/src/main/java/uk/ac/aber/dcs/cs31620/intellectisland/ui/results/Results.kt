@@ -4,11 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -30,7 +26,7 @@ fun Results(
 ) {
     val score by viewModel.calculateScore().observeAsState(0)
     val allQuestions by viewModel.allQuestions.observeAsState(emptyList())
-    val totalQuestions = allQuestions.size // Total number of questions
+    val totalQuestions = allQuestions.size
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
@@ -42,8 +38,8 @@ fun Results(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding) // Respect padding from the scaffold
-                    .padding(horizontal = 16.dp, vertical = 8.dp), // Content padding
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -69,22 +65,22 @@ fun Results(
                 // Display questions with correctness
                 allQuestions.forEachIndexed { index, question ->
                     val isCorrect = question.correctAnswerIndex == question.selectedAnswerIndex
-                    val resultIcon = if (isCorrect) "✔" else "✘" // Tick or Cross
+                    val resultIcon = if (isCorrect) "✔" else "✘"
 
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 10.dp) // Spacing between boxes
+                            .padding(vertical = 10.dp)
                             .background(
                                 inversePrimaryLightMediumContrast,
                                 shape = RoundedCornerShape(10.dp)
-                            ) // Rounded corners and background color
+                            )
                             .border(
                                 1.dp,
                                 Color.Gray,
                                 shape = RoundedCornerShape(10.dp)
-                            ) // Border with matching rounded corners
-                            .padding(16.dp) // Inner padding for content
+                            )
+                            .padding(16.dp)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -95,11 +91,11 @@ fun Results(
                                 text = "${index + 1}.",
                                 fontSize = 18.sp,
                                 color = Color.Black,
-                                modifier = Modifier.padding(end = 8.dp) // Space between number and question
+                                modifier = Modifier.padding(end = 8.dp)
                             )
 
                             Column(
-                                modifier = Modifier.weight(1f) // Allow column to take up available space
+                                modifier = Modifier.weight(1f)
                             ) {
                                 Text(
                                     text = question.questionText,
@@ -107,8 +103,17 @@ fun Results(
                                     color = Color.Black
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
+
+                                // Safely display user's answer
+                                val userAnswerText = when {
+                                    question.selectedAnswerIndex == -1 -> "Skipped"
+                                    question.selectedAnswerIndex in question.options.indices ->
+                                        question.options[question.selectedAnswerIndex]
+                                    else -> "Invalid Answer"
+                                }
+
                                 Text(
-                                    text = "Your Answer: ${question.options[question.selectedAnswerIndex]}",
+                                    text = "Your Answer: $userAnswerText",
                                     fontSize = 16.sp,
                                     color = if (isCorrect) Color.Green else Color.Red
                                 )
@@ -124,7 +129,7 @@ fun Results(
                                 text = resultIcon,
                                 fontSize = 24.sp,
                                 color = if (isCorrect) Color.Green else Color.Red,
-                                modifier = Modifier.padding(start = 8.dp) // Space between column and icon
+                                modifier = Modifier.padding(start = 8.dp)
                             )
                         }
                     }
@@ -135,14 +140,20 @@ fun Results(
                 Button(
                     onClick = { navController.navigate(Screen.HomeScreen.route) },
                     modifier = Modifier
-                        .fillMaxWidth() // Full width button
-                        .padding(20.dp), // Add spacing around the button
+                        .fillMaxWidth()
+                        .padding(20.dp),
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight)
                 ) {
-                    Text(text = "Return Home", color= Color.White, fontSize = 30.sp, modifier = Modifier.padding(20.dp))
+                    Text(
+                        text = "Return Home",
+                        color = Color.White,
+                        fontSize = 30.sp,
+                        modifier = Modifier.padding(20.dp)
+                    )
                 }
             }
         }
     )
 }
+
