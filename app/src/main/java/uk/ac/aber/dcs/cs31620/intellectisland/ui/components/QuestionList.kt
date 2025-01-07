@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inverseOnSurfaceLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.onSecondaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.outlineVariantLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.secondaryContainerLight
@@ -32,7 +33,7 @@ fun QuestionsList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = surfaceLight,
+                        color = inverseOnSurfaceLight,
                         shape = RoundedCornerShape(12.dp)
                     )
                     .border(1.dp, outlineVariantLight, RoundedCornerShape(12.dp))

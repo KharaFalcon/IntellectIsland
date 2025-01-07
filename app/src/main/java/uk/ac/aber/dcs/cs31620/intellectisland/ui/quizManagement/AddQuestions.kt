@@ -1,8 +1,10 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement
 
+import androidx.compose.foundation.background
 import uk.ac.aber.dcs.cs31620.intellectisland.viewmodel.QuestionViewModel
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -13,6 +15,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -21,7 +24,15 @@ import kotlinx.coroutines.launch
 import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.SegmentationButton
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.TopLevelScaffold
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inverseOnSurfaceLight
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.onSecondaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
+import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.secondaryContainerLight
+
+/**
+ * AddQuestionsScreen
+ * Allows user to add and manage questions for the quiz
+ */
 @Composable
 fun AddQuestions(navController: NavHostController) {
     val questionViewModel: QuestionViewModel = viewModel()
@@ -45,7 +56,7 @@ fun AddQuestions(navController: NavHostController) {
                     .padding(horizontal = 16.dp)
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-                // Segmentation Button
+                // Segmentation Button for managment navigation
                 SegmentationButton(
                     modifier = Modifier,
                     navController = navController
@@ -61,16 +72,12 @@ fun AddQuestions(navController: NavHostController) {
                     singleLine = true
                 )
 
-                // Options input
+                // Options input allows it to be dynamic
                 options.forEachIndexed { index, option ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        RadioButton(
-                            selected = index == selectedCorrectAnswer,
-                            onClick = { selectedCorrectAnswer = index }
-                        )
                         OutlinedTextField(
                             value = option,
                             onValueChange = { newOption ->
@@ -82,13 +89,14 @@ fun AddQuestions(navController: NavHostController) {
                                 .padding(vertical = 4.dp),
                             singleLine = true
                         )
+                        //removes options button if more than one exists
                         if (options.size > 1) {
                             IconButton(onClick = {
                                 options = options.toMutableList().apply { removeAt(index) }
                                 if (selectedCorrectAnswer == index) {
-                                    selectedCorrectAnswer = -1 // Reset correct answer if removed
+                                    selectedCorrectAnswer = -1 // Resets the correct answer if removed
                                 } else if (selectedCorrectAnswer > index) {
-                                    selectedCorrectAnswer-- // Adjust correct answer index
+                                    selectedCorrectAnswer--
                                 }
                             }) {
                                 Icon(Icons.Default.Delete, contentDescription = "Remove option")
@@ -96,7 +104,7 @@ fun AddQuestions(navController: NavHostController) {
                         }
                     }
                 }
-
+                // add new option button
                 if (options.size < 10) {
                     Button(
                         onClick = {
@@ -129,34 +137,25 @@ fun AddQuestions(navController: NavHostController) {
                             }
                             return@OutlinedButton
                         }
-                        if (options.size < 1) {
-                            coroutineScope.launch {
-                                snackbarHostState.showSnackbar("Please provide at least one option.")
-                            }
-                            return@OutlinedButton
-                        }
                         if (selectedCorrectAnswer < 0 || selectedCorrectAnswer >= options.size) {
                             coroutineScope.launch {
                                 snackbarHostState.showSnackbar("Please select a correct answer.")
                             }
                             return@OutlinedButton
                         }
-
+                        //adds question to db
                         coroutineScope.launch {
                             try {
-                                // Call the correct method to insert the question
                                 questionViewModel.insertSingleQuestion(
                                     QuestionData(
                                         questionText = questionText,
                                         options = options,
                                         correctAnswerIndex = selectedCorrectAnswer,
-                                        selectedAnswerIndex = -1, // Placeholder if you don't need this field for now
-                                        userName = "" // You can add a user name if needed
+                                        selectedAnswerIndex = -1,
+                                        userName = ""
                                     )
                                 )
                                 snackbarHostState.showSnackbar("Question added successfully!")
-
-                                // Clear input fields after success
                                 questionText = ""
                                 options = MutableList(1) { "" }
                                 selectedCorrectAnswer = -1
@@ -172,7 +171,7 @@ fun AddQuestions(navController: NavHostController) {
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-
+                //displays list of questions in the question bank
                 Text(
                     text = "Questions in the bank:",
                     fontSize = 20.sp,
@@ -180,33 +179,62 @@ fun AddQuestions(navController: NavHostController) {
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
-                // Display all questions in the bank
-                allQuestions.forEach { question ->
+                // Display numbered questions in the bank with circles
+                allQuestions.forEachIndexed { index, question ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
                         shape = RoundedCornerShape(12.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+                        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                        colors = CardDefaults.cardColors(containerColor = inverseOnSurfaceLight)
                     ) {
-                        Column(
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp)
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = question.questionText, fontSize = 16.sp, color = Color.Black)
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = "Options: ${question.options.joinToString(", ")}",
-                                fontSize = 14.sp,
-                                color = Color.DarkGray
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = "Correct Answer: ${question.options[question.correctAnswerIndex]}",
-                                fontSize = 14.sp,
-                                color = Color.Green
-                            )
+                            // Circle for the question number
+                            Box(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .background(
+                                        color = secondaryContainerLight,
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = (index + 1).toString(),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = onSecondaryContainerLight,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(16.dp))
+
+                            // Question details
+                            Column {
+                                Text(
+                                    text = question.questionText,
+                                    fontSize = 16.sp,
+                                    color = Color.Black
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "Options: ${question.options.joinToString(", ")}",
+                                    fontSize = 14.sp,
+                                    color = Color.DarkGray
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "Correct Answer: ${question.options[question.correctAnswerIndex]}",
+                                    fontSize = 14.sp,
+                                    color = Color.Green
+                                )
+                            }
                         }
                     }
                 }

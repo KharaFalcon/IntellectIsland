@@ -10,6 +10,10 @@ import uk.ac.aber.dcs.cs31620.intellectisland.datasource.QuestionDao
 import uk.ac.aber.dcs.cs31620.intellectisland.datasource.QuestionRepository
 import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
 
+/**
+ * VIEWMODEL CLASS
+ * Manages quiz data and operations
+ */
 class QuestionViewModel(application: Application) : AndroidViewModel(application) {
 
     private val questionDao: QuestionDao = IntellectIslandRoomDatabase.getDatabase(application)?.questionDao()
@@ -17,23 +21,23 @@ class QuestionViewModel(application: Application) : AndroidViewModel(application
 
     private val questionRepository: QuestionRepository = QuestionRepository(questionDao)
 
-    // LiveData for all questions in the database
+    // LiveData for all questions in the db
     val allQuestions: LiveData<List<QuestionData>> = questionRepository.getAllQuestions()
 
 
-    // Update a question in the database
+    // Updates a question in the database
     fun updateQuestion(question: QuestionData) {
         viewModelScope.launch(Dispatchers.IO) {
             questionRepository.updateQuestion(question)
         }
     }
 
-    // Retrieve a single question by ID
+    // Retrieves a single question by ID
     fun getQuestionById(questionId: Int): LiveData<QuestionData?> {
         return questionRepository.getQuestionById(questionId)
     }
 
-    // Delete a question from the database
+    // Deletes a question from the database
     fun deleteQuestion(question: QuestionData) {
         viewModelScope.launch(Dispatchers.IO) {
             questionRepository.deleteQuestion(question)
@@ -70,17 +74,6 @@ class QuestionViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun getQuestionsWithCorrectness(): LiveData<List<Pair<QuestionData, Boolean>>> {
-        val questionsWithCorrectness = MutableLiveData<List<Pair<QuestionData, Boolean>>>()
-        viewModelScope.launch(Dispatchers.IO) {
-            val questions = questionRepository.getAllQuestionsSync()
-            val result = questions.map { question ->
-                question to (question.correctAnswerIndex == question.selectedAnswerIndex)
-            }
-            questionsWithCorrectness.postValue(result)
-        }
-        return questionsWithCorrectness
-    }
 
 
     fun getUserAnswersByName(userName: String): LiveData<List<QuestionData>> {

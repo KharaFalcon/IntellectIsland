@@ -1,10 +1,9 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizManagement
+
 import uk.ac.aber.dcs.cs31620.intellectisland.viewmodel.QuestionViewModel
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -18,8 +17,17 @@ import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.QuestionsList
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.SegmentationButton
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.TopLevelScaffold
+
+/**
+ * RemoveQuestionScreen
+ * Displays a list of questions stored in the question bank.
+ * User can access tools to edit and delete questions.
+ */
 @Composable
-fun RemoveQuestions(navController: NavHostController, questionViewModel: QuestionViewModel = viewModel()) {
+fun RemoveQuestions(
+    navController: NavHostController,
+    questionViewModel: QuestionViewModel = viewModel()
+) {
     val questions by questionViewModel.allQuestions.observeAsState(emptyList())
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -57,7 +65,6 @@ fun RemoveQuestions(navController: NavHostController, questionViewModel: Questio
                     thickness = 1.dp,
                     color = Color.Gray
                 )
-                // Wrapping QuestionsList in a LazyColumn for scrolling
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -111,6 +118,7 @@ fun RemoveQuestions(navController: NavHostController, questionViewModel: Questio
                             Text("Cancel")
                         }
                     },
+                    //confirmation pop up to ensure nothing is deleted by mistake
                     title = { Text("Confirm Deletion") },
                     text = { Text("Are you sure you want to delete this question? This action cannot be undone.") }
                 )

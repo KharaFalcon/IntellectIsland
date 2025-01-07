@@ -1,4 +1,4 @@
-package uk.ac.aber.dcs.cs31620.intellectisland.ui.quizMode
+package uk.ac.aber.dcs.cs31620.intellectisland.ui.results
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,6 +19,10 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inversePrimaryLightMedium
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.viewmodel.QuestionViewModel
 
+/**
+ * ResultsScreen
+ * Displays the results of the quiz
+ */
 @Composable
 fun Results(
     navController: NavHostController,
@@ -55,6 +59,7 @@ fun Results(
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
+                // Display the user's score
                 Text(
                     text = "Total: $score / $totalQuestions questions",
                     fontSize = 24.sp,
@@ -109,6 +114,7 @@ fun Results(
                                     question.selectedAnswerIndex == -1 -> "Skipped"
                                     question.selectedAnswerIndex in question.options.indices ->
                                         question.options[question.selectedAnswerIndex]
+
                                     else -> "Invalid Answer"
                                 }
 
@@ -124,7 +130,7 @@ fun Results(
                                 )
                             }
 
-                            // Show Correctness Icon
+                            // Show Correct Icon
                             Text(
                                 text = resultIcon,
                                 fontSize = 24.sp,

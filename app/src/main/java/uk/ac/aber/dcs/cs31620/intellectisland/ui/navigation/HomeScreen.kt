@@ -17,6 +17,12 @@ import androidx.navigation.NavHostController
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.MainTopNavigationBar
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.TopLevelScaffold
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
+
+/**
+ * HomeScreen
+ * Entry Point to quiz after user details.
+ * Provides navigation options between quiz mode and management mode.
+ */
 @Composable
 fun HomeScreen(navController: NavHostController) {
     // Initialize coroutineScope and snackbarHostState
@@ -24,13 +30,13 @@ fun HomeScreen(navController: NavHostController) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     // MainTopNavigationBar
-    MainTopNavigationBar(navController) // Pass navController to MainTopNavigationBar
+    MainTopNavigationBar(navController)
 
     // Scaffold for the entire page structure
     TopLevelScaffold(
         navController = navController,
         coroutineScope = coroutineScope,
-        snackbarHostState = snackbarHostState, // Pass the snackbarHostState here
+        snackbarHostState = snackbarHostState,
         pageContent = { innerPadding ->
             Column(
                 modifier = Modifier
@@ -39,10 +45,10 @@ fun HomeScreen(navController: NavHostController) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
 
-            ) {
+                ) {
                 // Content within the column
                 Text(
-                    text = "Let's Begin", // Corrected text grammar
+                    text = "Let's Begin",
                     fontSize = 40.sp,
                     color = Color.Black,
                     modifier = Modifier.padding(top = 60.dp, end = 180.dp)
@@ -59,11 +65,16 @@ fun HomeScreen(navController: NavHostController) {
                         text = "Quiz Mode",
                         fontSize = 30.sp,
                         color = Color.White,
-                        modifier = Modifier.padding(bottom = 60.dp, top = 60.dp, start = 80.dp, end = 80.dp),
+                        modifier = Modifier.padding(
+                            bottom = 60.dp,
+                            top = 60.dp,
+                            start = 80.dp,
+                            end = 80.dp
+                        ),
                     )
                 }
 
-                Spacer(modifier = Modifier.height(80.dp)) // Spacing between buttons
+                Spacer(modifier = Modifier.height(80.dp))
 
                 // Management Mode Button
                 OutlinedButton(
@@ -76,7 +87,12 @@ fun HomeScreen(navController: NavHostController) {
                         text = "Management Mode",
                         fontSize = 30.sp,
                         color = Color.White,
-                        modifier = Modifier.padding(bottom = 60.dp, top = 60.dp, start = 30.dp, end = 30.dp),
+                        modifier = Modifier.padding(
+                            bottom = 60.dp,
+                            top = 60.dp,
+                            start = 30.dp,
+                            end = 30.dp
+                        ),
                     )
                 }
             }

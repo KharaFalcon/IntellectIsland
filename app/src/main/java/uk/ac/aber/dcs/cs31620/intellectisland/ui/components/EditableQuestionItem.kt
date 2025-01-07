@@ -2,9 +2,7 @@ package uk.ac.aber.dcs.cs31620.intellectisland.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
@@ -15,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
+
 @Composable
 fun EditableQuestionItem(
     navController: NavHostController,

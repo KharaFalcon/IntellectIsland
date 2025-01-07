@@ -5,9 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -18,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -61,7 +58,11 @@ fun MainTopNavigationBar(navController: NavHostController, onClick: () -> Unit =
                 modifier = Modifier
                     .size(380.dp) // Size of the profile icon
                     .clip(CircleShape) // Circular profile image
-                    .padding(start = 340.dp, top = 10.dp, bottom = 10.dp) // Padding from the right edge
+                    .padding(
+                        start = 340.dp,
+                        top = 10.dp,
+                        bottom = 10.dp
+                    ) // Padding from the right edge
                     .border(3.dp, MaterialTheme.colorScheme.primary, CircleShape)
                     .clickable {
                         // Navigate to the user profile screen

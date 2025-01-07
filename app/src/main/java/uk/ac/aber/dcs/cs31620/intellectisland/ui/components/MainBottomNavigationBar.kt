@@ -1,17 +1,12 @@
 package uk.ac.aber.dcs.cs31620.intellectisland.ui.components
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Quiz
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.EditNote
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Map
-import androidx.compose.material.icons.outlined.Pets
 import androidx.compose.material.icons.outlined.Quiz
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -20,16 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import uk.ac.aber.dcs.cs31620.intellectisland.R
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.screens
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.IntellectIslandTheme
+
 @Composable
 fun MainBottomNavigationBar(
     navController: NavHostController

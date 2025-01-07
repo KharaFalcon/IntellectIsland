@@ -36,30 +36,27 @@ fun UserProfile(navController: NavHostController) {
         R.drawable.av9
     )
 
-    // Remember CoroutineScope
     val coroutineScope = rememberCoroutineScope()
 
     // States for selected picture, name, and other details
     var selectedPicture by remember { mutableStateOf(defaultPictures[0]) }
     var userName by remember { mutableStateOf("John Doe") }
 
-    // Use TopLevelScaffold for navigation, bottom bar, etc.
     TopLevelScaffold(
         navController = navController,
         coroutineScope = coroutineScope,
         pageContent = { innerPadding ->
 
-            // Pass selected profile icon to MainTopNavigationBar
             MainTopNavigationBar(
                 navController = navController,
-                 // Pass the selected picture as the icon
+
             )
 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
-                    .padding(innerPadding), // Apply inner padding for safe areas
+                    .padding(innerPadding),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -78,9 +75,14 @@ fun UserProfile(navController: NavHostController) {
                         .size(120.dp)
                         .clip(CircleShape)
                         .clickable {
-                            // Handle picture selection logic here
                             coroutineScope.launch {
-                                Toast.makeText(navController.context, "Change profile picture clicked", Toast.LENGTH_SHORT).show()
+                                Toast
+                                    .makeText(
+                                        navController.context,
+                                        "Change profile picture clicked",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    .show()
                             }
                         },
                     contentScale = ContentScale.Crop
@@ -130,7 +132,11 @@ fun UserProfile(navController: NavHostController) {
                 Button(
                     onClick = {
                         coroutineScope.launch {
-                            Toast.makeText(navController.context, "Saving changes", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                navController.context,
+                                "Saving changes",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             // Add your save logic here, e.g., make a network call or database operation
                         }
                     },

@@ -5,23 +5,20 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.launch
-import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.EditableQuestionItem
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.MainTopNavigationBar
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.SegmentationButton
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inverseOnSurfaceLight
-import uk.ac.aber.dcs.cs31620.intellectisland.viewmodel.QuestionViewModel
 
+/**
+ * EditAnswersScreen
+ * Allows users to select an answer for a quiz question
+ */
 @Composable
 fun EditAnswers(navController: NavHostController) {
     var selectedAnswer by remember { mutableStateOf<String?>(null) }
@@ -47,7 +44,7 @@ fun EditAnswers(navController: NavHostController) {
             thickness = 1.dp,
             color = Color.Gray
         )
-
+        //starting point for quiz questions before db
         Text(
             text = "Which planet is nicknamed the ‘Red Planet’ due to its rusty surface?",
             color = Color.Black,
@@ -72,9 +69,11 @@ fun EditAnswers(navController: NavHostController) {
             enabled = selectedAnswer != null,
             shape = RoundedCornerShape(8.dp)
         ) {
-            Text(text = "Finish Editing",
+            Text(
+                text = "Finish Editing",
                 modifier = Modifier
-                    .padding(end = 80.dp, start = 80.dp))
+                    .padding(end = 80.dp, start = 80.dp)
+            )
         }
     }
 }
@@ -91,7 +90,7 @@ fun RadioButtonGroup(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .background(color = inverseOnSurfaceLight , shape = RoundedCornerShape(8.dp))
+                    .background(color = inverseOnSurfaceLight, shape = RoundedCornerShape(8.dp))
                     .padding(4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween

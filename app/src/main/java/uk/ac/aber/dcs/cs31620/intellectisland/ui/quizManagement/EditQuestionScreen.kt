@@ -16,8 +16,13 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import uk.ac.aber.dcs.cs31620.intellectisland.datasource.model.QuestionData
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.EditableQuestionItem
-import uk.ac.aber.dcs.cs31620.intellectisland.ui.components.SegmentationButton
 
+/**
+ * EditQuestionScreen
+ * Allows users to edit and remove the details of each individual question in the question bank.
+ * They can change which is the correct answer.
+ * They can they save there changes or go back.
+ */
 @Composable
 fun EditQuestionScreen(
     questionId: Int,
@@ -41,12 +46,12 @@ fun EditQuestionScreen(
 
         // Display and Edit Question
         question?.let { currentQuestion ->
-            updatedQuestion = currentQuestion // Set the initial state for editing
+            updatedQuestion = currentQuestion // Sets the state for editing
             EditableQuestionItem(
                 navController = navController,
                 question = currentQuestion,
                 onQuestionChange = { newQuestion ->
-                    updatedQuestion = newQuestion // Update state with changes
+                    updatedQuestion = newQuestion // Updates the state with changes
                 }
             )
         } ?: run {
@@ -65,7 +70,7 @@ fun EditQuestionScreen(
                 updatedQuestion?.let { questionToSave ->
                     coroutineScope.launch {
                         questionViewModel.updateQuestion(questionToSave)
-                        navController.popBackStack() // Navigate back after saving
+                        navController.popBackStack() // Navigate back
                     }
                 }
             },

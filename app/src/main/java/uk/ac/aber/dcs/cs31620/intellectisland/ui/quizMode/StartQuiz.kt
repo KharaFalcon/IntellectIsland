@@ -29,9 +29,16 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.navigation.Screen
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.secondaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.tertiaryContainerLight
+
+/**
+ * StartQuizScreen
+ * Displays the screen to allow the user to start quiz in their own time instead if jumping straight into the quiz
+ */
 @Composable
-fun StartQuiz(navController: NavHostController,viewModel: QuestionViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
-    // Initialize coroutineScope and snackbarHostState
+fun StartQuiz(
+    navController: NavHostController,
+    viewModel: QuestionViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -55,7 +62,7 @@ fun StartQuiz(navController: NavHostController,viewModel: QuestionViewModel = an
             ) {
                 // Quiz Title
                 Text(
-                    text = "Quiz Name",
+                    text = "IntellectIsland Quiz",
                     fontSize = 40.sp,
                     color = Color.Gray,
                     modifier = Modifier.padding(40.dp)
@@ -63,7 +70,7 @@ fun StartQuiz(navController: NavHostController,viewModel: QuestionViewModel = an
                 val questionList by viewModel.allQuestions.observeAsState(emptyList())
                 // Circular Progress Indicator
                 CircularProgressIndicator(
-                    progress = 1f, // 50% progress
+                    progress = 1f,
                     question = "Questions",
                     largeNumber = questionList.size,
                     circleColor = tertiaryContainerLight,

@@ -27,18 +27,25 @@ import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.inverseOnSurfaceLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.onSecondaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.primaryContainerLight
 import uk.ac.aber.dcs.cs31620.intellectisland.ui.theme.secondaryContainerLight
+
+/**
+ * QuestionsScreen
+ * Displays the quiz question screen for all the questions in the bank
+ * It shows them one at a time.
+ * Handles saving answers, selecting answers, tracking the progress made and simple navigation
+ */
 @Composable
 fun Question(
     navController: NavHostController,
     viewModel: QuestionViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    // Observe questions
+    // allows you to look at questions saved
     val originalQuestionList by viewModel.allQuestions.observeAsState(emptyList())
+    //Shuffles questions for random order
     val shuffledQuestionList = remember(originalQuestionList) {
         if (originalQuestionList.isNotEmpty()) originalQuestionList.shuffled() else emptyList()
     }
 
-    // Log to debug issues
     if (originalQuestionList.isEmpty()) {
         Log.e("Question", "originalQuestionList is empty")
     } else {
@@ -81,7 +88,7 @@ fun Question(
                 lineHeight = 48.sp
             )
             Spacer(modifier = Modifier.height(32.dp))
-
+            // Box to show the list of options
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -162,7 +169,9 @@ fun Question(
                             currentQuestionIndex--
                             selectedAnswerIndex = -1 // Reset selection
                         },
-                        modifier = Modifier.weight(1f).padding(end = 8.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp),
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight)
                     ) {
@@ -179,7 +188,9 @@ fun Question(
                             navController.navigate(Screen.Results.route)
                         }
                     },
-                    modifier = Modifier.weight(1f).padding(start = if (currentQuestionIndex > 0) 8.dp else 0.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = if (currentQuestionIndex > 0) 8.dp else 0.dp),
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.outlinedButtonColors(containerColor = primaryContainerLight)
                 ) {
